@@ -62,7 +62,10 @@ Passenger Trains can transport players between areas within a server or to compl
    2. Select an Object Layer on your map. 
    3. Open the `File` menu, click `New` and select `Add Passenger Train...`
    4. Fill in the dialog box based on the information below:
-> `Train Name` must be unique for the area.<br>
+> `Train Name` is how the train is identified in other areas.<br>
+>  &nbsp; &nbsp; Within a single area all train names must be unique. <br>
+>  &nbsp; &nbsp; However, you must use the same Train Name for all connected trains in different areas. <br>
+>  &nbsp; &nbsp; For example, if your train `train1` in ACDC 1 links to a train in Sci-Lab 1, then the train in Sci-Lab 1 also needs to be `train1`. <br>
 > `Color` changes the train's appearance.<br>
 > `Speed` can be increased to make the train move faster (1 = default, 1.5 is 50% faster, 2 is 100% faster, etc.) <br>
 > `Direction` select which direction the train is traveling.<br>
