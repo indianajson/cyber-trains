@@ -56,7 +56,7 @@ The dialog box is smart so if you type something that's malformed it will let yo
 
 Passenger Trains can transport players between areas within a server or to completely different servers. The receiving server does not need a train configured for the transfer to work, however, if no train on the receiving server is configured then the player will simply be dropped off at the Home Warp of the destination server. 
 
-> **Important:** Because of how tiles/objects stack in ONB, your train object and track should be three layers below your platform. For example, if your main platform is currently at Layer 0 (Vertical Offset 0) you need to move it to Layer 3 (Vertical Offset -32) and put the track on Layer 0 (Vertical Offset 0). If this doesn't make sense take a look at the layers in default.tmx from the demo server. If you put them any closer there will be visual glitches where the train appears above your platform (instead of below). 
+**Important:** Because of how tiles/objects stack in ONB, your train object and track should be three layers below your walkable area. For example, if your player stands on Layer 0 (Vertical Offset 0) you need to move it to Layer 3 (Vertical Offset -32) and put the track and train on Layer 0 (Vertical Offset 0). This also means your train's Z would be 0. If this doesn't make sense take a look at the layers in default.tmx from the demo server. If you put them any closer there will be visual glitches where the train appears above your platform (instead of below). 
 
    1. Open your map in Tiled.
    2. Select an Object Layer on your map. 
