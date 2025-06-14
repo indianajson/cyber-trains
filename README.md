@@ -121,11 +121,12 @@ Yes, simple do not add a Conductor on the other end. Once the player arrives at 
 
 Yes, each conductor is completely independent and can have a unique list of destinations. For example, let's say you have a Conductor in ACDC 1, SciLab 1, and Yoka Square. You can make the Conductor in ACDC have SciLab 1 and Yoka Square as destinations, but the Yoka Square conductor can have just SciLab 1 as a destination. 
 
+<!--
 &nbsp; <br>
 ### Can I add extra non-destination rows to the Conductor menu?
 
 Yes, if you want to add a row of text that doesn't send someone to a destination make the destination `cancel` and use the destination label as your textblock. This will close the menu if they select it and not activate a train. 
-
+-->
 &nbsp; <br>
 ### Credits
 
