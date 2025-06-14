@@ -30,7 +30,7 @@ This script adds three new object types: Cargo Trains, Passenger Trains, and Con
    2. Select an Object Layer on your map. 
    3. Open the `File` menu, click `New` and select `Add Cargo Train...`
    4. Fill in the dialog box based on the information below:
- > `Train Name` must be unique for the area.<br>
+> `Train Name` must be unique for the area.<br>
 > `Color` changes the train's appearance.<br>
 > `Speed` can be increased to make the train move faster (1 = default, 1.5 is 50% faster, 2 is 100% faster, etc.) <br>
 > `Direction` select which direction the train is traveling.<br>
@@ -56,8 +56,21 @@ Passenger Trains can transport players between areas within a server or to compl
    2. Select an Object Layer on your map. 
    3. Open the `File` menu, click `New` and select `Add Passenger Train...`
    4. Fill in the dialog box based on the information below:
+> `Train Name` must be unique for the area.<br>
+> `Color` changes the train's appearance.<br>
+> `Speed` can be increased to make the train move faster (1 = default, 1.5 is 50% faster, 2 is 100% faster, etc.) <br>
+> `Direction` select which direction the train is traveling.<br>
+> `Start Point` provide a x,y,z tile position (hover over a tile and look in the bottom left of Tiled to see X and Y).<br>
+>  &nbsp; &nbsp; For the bottom most layer, Z equals 0 and goes up by 1 as you move upward.<br>
+>  &nbsp; &nbsp; This is where the train spanws, it should not be visible from the walkable parts of your area.<br>
+> `Stop Point` provide a x,y,z tile position (this is where the train picks up passengers, you may have to tweak a few times).<br>
+> `End Point` provide a x,y,z tile position (this is where the train despawns, should not be visible walking around the area).<br>
+> `Driver Texture` path to image file for your Driver NPC (optionaL). <br>
+> `Driver Animation` path to .animation file for your Driver NPC (optionaL). <br>
+> `Cargo Texture` path to image file for your cargo/passenger NPC (optionaL). <br>
+> `Cargo Animation` path to .animation file for your cargo/passenger NPC (optionaL).
 
-While you've added a Passenger Train, you also have to add a Conductor (so the player can choose a destination and summon the Passenger Train). 
+5. You need to add a Conductor so the player can choose a destination and summon the Passenger Train (see below). 
 
 Remember, the dialog box is smart so if you type something that's malformed it will let you know. However, it doesn't check if your X,Y,Z positions are correct. If you need to edit them after you make your Passenger Train simply press `S` on your keyboard (selects the `Select Object` tool) and click on the Point on your map for your Passenger Train, you can then change the X,Y,Z values on the left under _Custom Properties_. 
 
