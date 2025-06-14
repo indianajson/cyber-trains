@@ -13,7 +13,7 @@ A server script to add customizable cyber metro trains (from BN3/EXE3) to Open N
 
 ### Want to try it out? 
 
-> This repository is a complete test server you can spin up, which includes configured examples for both types of trains and the conductor, which will show you how they should be configured and how they function in-game without having to do the setup yourself. 
+> This repository is a complete test server you can spin up that includes configured examples for both types of trains and the conductor. It will show you how they should be configured and how they function in-game without having to do the setup yourself. 
 
 ### How do I install this on my ONB server? 
 
@@ -25,7 +25,7 @@ A server script to add customizable cyber metro trains (from BN3/EXE3) to Open N
 
 ### How do I add trains to my maps? 
 
-This script provides three object types: Cargo Trains, Passenger Trains, and Conductors. Cargo Trains run along a straight path on a loop and do not have any interactions (they are purely aesthetics). Passenger Trains function exactly like the cyber metro from BN3/EXE3 where you talk to a Mr. Prog (Conductor) who summons a train and the player is transported to another area. Conductors spawn the Mr. Prog and should be placed wherever you want players to request a Passenger Train. 
+This script adds three new object types: Cargo Trains, Passenger Trains, and Conductors. Cargo Trains run along a straight path on a loop and do not have any interactions (they are purely aesthetics). Passenger Trains function exactly like the cyber metro from BN3/EXE3 where you talk to a Mr. Prog (Conductor) who summons a train and the player is transported to another area. Conductors spawn the Mr. Prog and should be placed wherever you want players to request a Passenger Train. 
 
 ### Setup for Cargo Trains
 
@@ -51,7 +51,7 @@ The dialog box is smart so if you type something that's invalid it will let you 
 
 ### Setup for Passenger Trains
 
-Passenger Trains can transport players between areas within a server or to a completely different servers. The receiving server does not have to have a train configured for this to work (but in that case the user will simply be dropped off at the Home Warp of the destination server). 
+Passenger Trains can transport players between areas within a server or to completely different servers. The receiving server does not have to have a train configured for this to work (but in that case the player will simply be dropped off at the Home Warp of the destination server). 
 
    1. Open your map in Tiled.
    2. Select an Object Layer on your map. 
