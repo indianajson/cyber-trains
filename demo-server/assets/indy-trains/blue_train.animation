@@ -1,0 +1,37 @@
+imagePath="blue_train.png"
+
+animation state="WALK_DL"
+frame duration="0.1" x="0" y="46" w="44" h="36" originx="20" originy="0" flipx="1"
+
+animation state="WALK_DR"
+frame duration="0.1" x="0" y="46" w="44" h="36" originx="20" originy="0"
+
+animation state="WALK_UL"
+frame duration="0.1" x="0" y="0" w="45" h="46" originx="25" originy="0"
+
+animation state="WALK_UR"
+frame duration="0.1" x="0" y="0" w="45" h="46" originx="25" originy="0" flipx="1"
+
+animation state="IDLE_DL"
+frame duration="0.1" x="0" y="46" w="44" h="36" originx="20" originy="0" flipx="1"
+
+animation state="IDLE_DR"
+frame duration="0.1" x="0" y="46" w="44" h="36" originx="20" originy="0"
+
+animation state="IDLE_UL"
+frame duration="0.1" x="0" y="0" w="45" h="46" originx="25" originy="0"
+
+animation state="IDLE_UR"
+frame duration="0.1" x="0" y="0" w="45" h="46" originx="25" originy="0" flipx="1"
+
+animation state="RUN_DL"
+frame duration="0.1" x="0" y="46" w="44" h="36" originx="20" originy="0" flipx="1"
+
+animation state="RUN_DR"
+frame duration="0.1" x="0" y="46" w="44" h="36" originx="20" originy="0"
+
+animation state="RUN_UL"
+frame duration="0.1" x="0" y="0" w="45" h="46" originx="25" originy="0"
+
+animation state="RUN_UR"
+frame duration="0.1" x="0" y="0" w="45" h="46" originx="25" originy="0" flipx="1"
