@@ -8,9 +8,6 @@ A script to add customizable cyber metro trains (from BN3/EXE3) to Open Net Batt
 
 > This script is plug-n-play. Once you copy the required scripts and assets to your server (see below) everything else is configured within the Tiled map editor for your server area. Additionally, you can install the Tiled extension which will make adding them to your map even easier. 
 
-
-
-
 ### Want to try it out? 
 
 > This repository is a complete test server you can spin up that includes configured examples for both types of trains and the conductor. It will show you how they should be configured and how they function in-game without having to do the setup yourself. 
@@ -84,7 +81,7 @@ Yes, simple do not add a Conductor on the other end. Once they arrive at the des
 
 No, each conductor is completely indepedent and can have a unique list of destinations. For example, let's say you have a Conductor in ACDC 1, SciLab 1, and Yoka Square. You can make the Conductor in ACDC have SciLab 1 and Yoka Square as destinations, but the Yoka Square conductor can have just SciLab 1 as a destination. 
 
-### Credits
+## Credits
 
 Coding - Indiana<br>
 Cyber Metro Sprite - Indiana<br>
