@@ -2,8 +2,7 @@
 
 A server script to add customizable cyber metro trains (from BN3/EXE3) to Open Net Battle servers. 
 
-[collogue of four screenshots]
-
+![train-preview](https://github.com/user-attachments/assets/1282c0e3-485a-409b-83c3-67c8e699e623)
 
 <h3>How does it work?</h3>
 
