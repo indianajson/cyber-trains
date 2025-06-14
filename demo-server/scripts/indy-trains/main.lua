@@ -3,7 +3,7 @@ print("[trains] Starting Indy's Trains")
 
 -- NEXT STEPS
    -- finish Github documentation
-
+   -- Fix splitter to not ignore double string as delimiter (as opposed to single character)
 -- v2 features
 -- Cargo Train Enhancements
     -- Add pedestal
@@ -345,7 +345,7 @@ function summon_departing_passenger_train(player_id,post_id)
     elseif string.lower(post_data[3]) == "server" then
         destination_type = "server"
     else 
-        print("Invalid destination of \""..post_data[3].."\".")
+        print("Invalid destination type of \""..post_data[3].."\".")
     end 
     if not track_cache[area_id] then
         track_cache[area_id] = {}
