@@ -68,7 +68,7 @@ Passenger Trains can transport players between areas within a server or to a com
 
 ### Credits
 
-Coding - Indiana
-Cyber Metro Sprite - Indiana
-Conductor Prog Sprite - CyanMan.EXE
-Sound Effect - DJRezzed/Enzan
+Coding - Indiana<br>
+Cyber Metro Sprite - Indiana<br>
+Conductor Prog Sprite - CyanMan.EXE<br>
+Sound Effects - DJRezzed/Enzan<br>
