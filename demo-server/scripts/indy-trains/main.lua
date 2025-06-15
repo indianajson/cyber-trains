@@ -152,54 +152,54 @@ function summon_arriving_passenger_train(player_id)
         local light_offset_y = 0
 
         if direction == "DL" then
-                Net.animate_player(player_id, "IDLE_UL", true)  
-                --less jitter
-                car_offset_x = -.9534
-                car_offset_y = -1.385
-                train_offset_x = -.92
-                train_offset_y = -.449
-                driver_offset_x = -.45
-                driver_offset_y = 0
-                pedestal_offset_x = -.5
-                pedestal_offset_y = .2
-                light_offset_x = .28
-                light_offset_y = -.6
-            elseif direction == "DR" then
-                Net.animate_player(player_id, "IDLE_UR", true)  
-                --some jitter
-                car_offset_x = -1.4
-                car_offset_y = -.9
-                train_offset_x = -.5
-                train_offset_y = -.9
-                driver_offset_x = 0
-                driver_offset_y = -.4
-                pedestal_offset_x = .209
-                pedestal_offset_y = -.409
-                light_offset_x = -.7
-                light_offset_y = .3
-            elseif direction == "UL" then
-                Net.animate_player(player_id, "IDLE_UR", true)  
-                --some jitter
-                car_offset_x = -.15
-                car_offset_y = -.95
-                train_offset_x = -1.4
-                train_offset_y = -1.25
-                driver_offset_x = -.5
-                driver_offset_y = -.4
-                light_offset_x = 0
-                light_offset_y = 0
-            elseif direction == "UR" then --WORKING ON
-                Net.animate_player(player_id, "IDLE_UL", true)  
-                --some jitter
-                car_offset_x = -.9
-                car_offset_y = .1
-                train_offset_x = -1.2
-                train_offset_y = -1.2
-                driver_offset_x = -.4
-                driver_offset_y = -.4
-                light_offset_x = .28
-                light_offset_y = .8
-            end 
+            Net.animate_player(player_id, "IDLE_UL", true)  
+            --less jitter
+            car_offset_x = -.9534
+            car_offset_y = -1.385
+            train_offset_x = -.92
+            train_offset_y = -.449
+            driver_offset_x = -.45
+            driver_offset_y = 0
+            pedestal_offset_x = -.5
+            pedestal_offset_y = .2
+            light_offset_x = .28
+            light_offset_y = -.6
+        elseif direction == "DR" then
+            Net.animate_player(player_id, "IDLE_UR", true)  
+            --some jitter
+            car_offset_x = -1.4
+            car_offset_y = -.9
+            train_offset_x = -.5
+            train_offset_y = -.9
+            driver_offset_x = 0
+            driver_offset_y = -.4
+            pedestal_offset_x = .209
+            pedestal_offset_y = -.409
+            light_offset_x = -.7
+            light_offset_y = .3
+        elseif direction == "UL" then
+            Net.animate_player(player_id, "IDLE_UR", true)  
+            --some jitter
+            car_offset_x = -.15
+            car_offset_y = -.95
+            train_offset_x = -1.4
+            train_offset_y = -1.25
+            driver_offset_x = -.5
+            driver_offset_y = -.4
+            light_offset_x = .65
+            light_offset_y = .3
+        elseif direction == "UR" then --WORKING ON
+            Net.animate_player(player_id, "IDLE_UL", true)  
+            --some jitter
+            car_offset_x = -.9
+            car_offset_y = .1
+            train_offset_x = -1.2
+            train_offset_y = -1.2
+            driver_offset_x = -.4
+            driver_offset_y = -.4
+            light_offset_x = .28
+            light_offset_y = .8
+        end 
 
         local pedestal_id = train.name..'-pedestal-'..area_id
         if direction == "DR" or direction == "DL" then
@@ -419,8 +419,8 @@ function summon_departing_passenger_train(player_id,post_id)
                 train_offset_y = -1.25
                 driver_offset_x = -.5
                 driver_offset_y = -.4
-                light_offset_x = 0
-                light_offset_y = 0
+                light_offset_x = .65
+                light_offset_y = .3
             elseif direction == "UR" then --WORKING ON
                 Net.animate_player(player_id, "IDLE_UL", true)  
                 --some jitter
