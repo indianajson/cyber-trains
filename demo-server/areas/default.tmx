@@ -62,9 +62,10 @@
    <properties>
     <property name="Color" value="Gray"/>
     <property name="Direction" value="Down Left"/>
-    <property name="End" value="28,32,0"/>
+    <property name="End" value="28,32"/>
     <property name="Speed" value="2"/>
-    <property name="Start" value="28,6,0"/>
+    <property name="Start" value="28,6"/>
+    <property name="Train Z" value="0"/>
    </properties>
    <point/>
   </object>
@@ -225,9 +226,11 @@
    <properties>
     <property name="Color" value="Cyan"/>
     <property name="Direction" value="Up Right"/>
-    <property name="End" value="19,5,0"/>
-    <property name="Start" value="19,36,0"/>
-    <property name="Stop" value="19,19.5,0"/>
+    <property name="End" value="19,5"/>
+    <property name="Platform Z" value="3"/>
+    <property name="Start" value="19,36"/>
+    <property name="Stop" value="19,19.5"/>
+    <property name="Train Z" value="0"/>
    </properties>
    <point/>
   </object>
@@ -245,9 +248,11 @@
     <property name="Direction" value="Down Right"/>
     <property name="Driver Animation" value="/server/assets/indy-trains/demo/protoman-bn5.animation"/>
     <property name="Driver Texture" value="/server/assets/indy-trains/demo/protoman-bn5.png"/>
-    <property name="End" value="37,16,0"/>
-    <property name="Start" value="5,16,0"/>
-    <property name="Stop" value="24,16,0"/>
+    <property name="End" value="37,16"/>
+    <property name="Platform Z" value="3"/>
+    <property name="Start" value="5,16"/>
+    <property name="Stop" value="24,16"/>
+    <property name="Train Z" value="0"/>
    </properties>
    <point/>
   </object>
@@ -348,9 +353,10 @@
    <properties>
     <property name="Color" value="Blue"/>
     <property name="Direction" value="Up Left"/>
-    <property name="End" value="9,26,5"/>
+    <property name="End" value="9,26"/>
     <property name="Speed" value="1.5"/>
-    <property name="Start" value="37,26,5"/>
+    <property name="Start" value="37,26"/>
+    <property name="Train Z" value="5"/>
    </properties>
    <point/>
   </object>

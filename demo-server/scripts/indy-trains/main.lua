@@ -22,10 +22,10 @@ print("[trains] Starting Indy's Trains")
     -- need a boarding interaction that causes player to board the train 
 
 --properties for passenger trains
-local passenger_train_required_properties = {"Start","End","Direction","Stop"}
+local passenger_train_required_properties = {"Start","End","Direction","Stop","Platform Z","Train Z"}
 local passenger_train_optional_properties = {"Speed","Color"}
 --properties for cargo trains
-local cargo_train_required_properties = {"Start","End","Direction"}
+local cargo_train_required_properties = {"Start","End","Direction","Train Z"}
 local cargo_train_optional_properties = {"Speed","Cars","Color","Driver Texture","Driver Animation"}
 --properties for conductors
 local conductor_required_properties = {"Train","1 Area"}
@@ -35,8 +35,8 @@ local conductor_optional_properties = {"1 Type","1 Name","Animation","Texture","
 local default_cars = 1
 local default_driver_texture_path="/server/assets/indy-trains/conductor-prog.png"
 local default_driver_animation_path="/server/assets/indy-trains/conductor-prog.animation"
-local default_driver_mug_texture_path="/server/assets/indy-trains/prog-mug.png"
-local default_driver_mug_animation_path="/server/assets/indy-trains/prog-mug.animation"
+local default_driver_mug_texture_path="/server/assets/indy-trains/conductor-prog-mug.png"
+local default_driver_mug_animation_path="/server/assets/indy-trains/conductor-prog-mug.animation"
 local default_color = "orange" --selects a different sprite sheet for engine and cars 
 local default_speed = 1 --sets the speed it moves with 1 (one) being MMBN3-esque.
 
@@ -50,18 +50,19 @@ local player_using_train_menu = {}
 
 --purpose: splits a string based on a delimiter
 --usaged: used at various points to seperate values
-local function splitter (inputstr, sep)
-   if sep == nil then
-      sep = '%s'
-   end
-   local t={}
-   for str in string.gmatch(inputstr, '([^'..sep..']+)') 
-   do
-      table.insert(t, str)
-   end
-   return t
+local function splitter(inputstr, sep)
+    if sep == nil then
+        sep = '%s'
+    else
+        sep = sep:gsub("[%(%)%.%%%+%-%*%?%[%]%^%$]", "%%%1")
+    end
+    
+    local t = {}
+    for str in (inputstr..sep):gmatch("(.-)"..sep) do
+        table.insert(t, str)
+    end
+    return t
 end
-
 --Shorthand for async
 function async(p)
     local co = coroutine.create(p)
@@ -133,11 +134,11 @@ function summon_arriving_passenger_train(player_id)
         Net.fade_player_camera(player_id, {r=0, g=0, b=0, a=0}, 2)
 
         local driver_id = train.name..'-driver-'..area_id
-        local driver = Net.create_bot(driver_id,{name="", area_id=area_id, texture_path=trainProps["Driver Texture"], animation_path=trainProps["Driver Animation"], x=trainProps["startX"], y=trainProps["startY"], z=trainProps["startZ"], solid=false,warp_in=false })
+        local driver = Net.create_bot(driver_id,{name="", area_id=area_id, texture_path=trainProps["Driver Texture"], animation_path=trainProps["Driver Animation"], x=trainProps["startX"], y=trainProps["startY"], z=trainProps["trainZ"], solid=false,warp_in=false })
         local car_id = train.name..'-car-'..area_id
-        local driver = Net.create_bot(car_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/"..trainProps["Color"].."_car.png", animation_path="/server/assets/indy-trains/"..trainProps["Color"].."_car.animation", x=trainProps["startX"], y=trainProps["startY"], z=trainProps["startZ"], solid=false,warp_in=false })
+        local driver = Net.create_bot(car_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/"..trainProps["Color"].."_car.png", animation_path="/server/assets/indy-trains/"..trainProps["Color"].."_car.animation", x=trainProps["startX"], y=trainProps["startY"], z=trainProps["trainZ"], solid=false,warp_in=false })
         local engine_id = train.name..'-engine-'..area_id
-        local driver = Net.create_bot(engine_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/"..trainProps["Color"].."_train.png", animation_path="/server/assets/indy-trains/"..trainProps["Color"].."_train.animation", x=trainProps["startX"], y=trainProps["startY"], z=trainProps["startZ"], solid=false,warp_in=false })
+        local driver = Net.create_bot(engine_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/"..trainProps["Color"].."_train.png", animation_path="/server/assets/indy-trains/"..trainProps["Color"].."_train.animation", x=trainProps["startX"], y=trainProps["startY"], z=trainProps["trainZ"], solid=false,warp_in=false })
         
         local car_offset_x = 0
         local car_offset_y = 0
@@ -203,7 +204,7 @@ function summon_arriving_passenger_train(player_id)
         local pedestal_id = train.name..'-pedestal-'..area_id
         if direction == "DR" or direction == "DL" then
             --spawn pedestal
-            local pedestal = Net.create_bot(pedestal_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/pedestal.png", animation_path="/server/assets/indy-trains/pedestal_"..trainProps["Color"]..".animation", x=trainProps["startX"], y=trainProps["startY"], z=trainProps["startZ"], solid=false,warp_in=false })
+            local pedestal = Net.create_bot(pedestal_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/pedestal.png", animation_path="/server/assets/indy-trains/pedestal_"..trainProps["Color"]..".animation", x=trainProps["startX"], y=trainProps["startY"], z=trainProps["trainZ"], solid=false,warp_in=false })
         end
 
         start_to_stop = trainProps["Duration Start to Stop"]
@@ -211,22 +212,22 @@ function summon_arriving_passenger_train(player_id)
 
         --Move player with Train to Station
         if direction == "DR" then
-            local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=(trainProps["startX"]+1.5-.5)},{property="Y",ease="Out",value=(trainProps["startY"]+1.35)}},duration=0}}
-            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=trainProps["stopX"]+1.5-.5},{property="Y",ease="Out",value=trainProps["stopY"]+1.35}},duration=start_to_stop}
+            local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=(trainProps["startX"]+1.5-.5+trainProps["offset"])},{property="Y",ease="Out",value=(trainProps["startY"]+1.35+trainProps["offset"])}},duration=0}}
+            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=trainProps["stopX"]+1.5-.5+trainProps["offset"]},{property="Y",ease="Out",value=trainProps["stopY"]+1.35+trainProps["offset"]}},duration=start_to_stop}
             Net.animate_player_properties(player_id, keyframes) 
 
         elseif direction == "UL" then
-            local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=(trainProps["startX"]+2.15)},{property="Y",ease="Out",value=(trainProps["startY"]+1.4)}},duration=0}}
-            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=trainProps["stopX"]+2.15},{property="Y",ease="Out",value=trainProps["stopY"]+1.4}},duration=start_to_stop}
+            local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=(trainProps["startX"]+2.15+trainProps["offset"])},{property="Y",ease="Out",value=(trainProps["startY"]+1.4+trainProps["offset"])}},duration=0}}
+            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=trainProps["stopX"]+2.15+trainProps["offset"]},{property="Y",ease="Out",value=trainProps["stopY"]+1.4+trainProps["offset"]}},duration=start_to_stop}
             Net.animate_player_properties(player_id, keyframes) 
         elseif direction == "UR" then
-            local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=(trainProps["startX"]+1.4)},{property="Y",ease="Out",value=(trainProps["startY"]+2.4)}},duration=0}}
-            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=trainProps["stopX"]+1.4},{property="Y",ease="Out",value=trainProps["stopY"]+2.4}},duration=start_to_stop}
+            local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=(trainProps["startX"]+1.4+trainProps["offset"])},{property="Y",ease="Out",value=(trainProps["startY"]+2.4+trainProps["offset"])}},duration=0}}
+            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=trainProps["stopX"]+1.4+trainProps["offset"]},{property="Y",ease="Out",value=trainProps["stopY"]+2.4+trainProps["offset"]}},duration=start_to_stop}
             Net.animate_player_properties(player_id, keyframes) 
 
         elseif direction == "DL" then
-            local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=(trainProps["startX"]+1.3)},{property="Y",ease="Out",value=(trainProps["startY"]+1.05)}},duration=0}}
-            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=trainProps["stopX"]+1.3},{property="Y",ease="Out",value=trainProps["stopY"]+1.05}},duration=start_to_stop}
+            local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=(trainProps["startX"]+1.3+trainProps["offset"])},{property="Y",ease="Out",value=(trainProps["startY"]+1.05+trainProps["offset"])}},duration=0}}
+            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="Out",value=trainProps["stopX"]+1.3+trainProps["offset"]},{property="Y",ease="Out",value=trainProps["stopY"]+1.05+trainProps["offset"]}},duration=start_to_stop}
             Net.animate_player_properties(player_id, keyframes) 
 
         end 
@@ -252,7 +253,7 @@ function summon_arriving_passenger_train(player_id)
 
         --Animate Light Path 
         local lightpath_id = train.name..'-light-'..area_id
-        local lightpath = Net.create_bot(lightpath_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/lightpath.png", animation_path="/server/assets/indy-trains/lightpath_"..trainProps["Color"]..".animation", x=trainProps["stopX"]+.5+light_offset_x, y=trainProps["stopY"]+.5+light_offset_y, z=trainProps["stopZ"], solid=false,warp_in=false })
+        local lightpath = Net.create_bot(lightpath_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/lightpath.png", animation_path="/server/assets/indy-trains/lightpath_"..trainProps["Color"]..".animation", x=trainProps["stopX"]+.5+light_offset_x, y=trainProps["stopY"]+.5+light_offset_y, z=trainProps["trainZ"], solid=false,warp_in=false })
 
         local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",value=trainProps["stopX"]+.5+light_offset_x},{property="Y",value=trainProps["stopY"]+.5+light_offset_y}},duration=0}}
         keyframes[#keyframes+1] = {properties={{property="X",ease="Linear",value=trainProps["stopX"]+.5+light_offset_x},{property="Y",ease="Linear",value=trainProps["stopY"]+.5+light_offset_y}},duration=0}
@@ -263,24 +264,24 @@ function summon_arriving_passenger_train(player_id)
 
         --Animation for Player Disembarking train
         if direction == "DR" then
-            local keyframes = {{properties={{property="Animation",value="WALK_DL"},{property="X",ease="Linear",value=(trainProps["stopX"]+1)},{property="Y",ease="Linear",value=(trainProps["stopY"]+1.35)}},duration=0}}
-            keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_DL"},{property="X",ease="Linear",value=trainProps["stopX"]+1.15},{property="Y",ease="Linear",value=trainProps["stopY"]+2.85}},duration=1}
-            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_DL"},{property="X",ease="Linear",value=trainProps["stopX"]+1.15},{property="Y",ease="Linear",value=trainProps["stopY"]+2.85}},duration=0}
+            local keyframes = {{properties={{property="Animation",value="WALK_DL"},{property="X",ease="Linear",value=(trainProps["stopX"]+1+trainProps["offset"])},{property="Y",ease="Linear",value=(trainProps["stopY"]+1.35+trainProps["offset"])}},duration=0}}
+            keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_DL"},{property="X",ease="Linear",value=trainProps["stopX"]+1.15+trainProps["offset"]},{property="Y",ease="Linear",value=trainProps["stopY"]+2.85+trainProps["offset"]}},duration=1}
+            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_DL"},{property="X",ease="Linear",value=trainProps["stopX"]+1.15+trainProps["offset"]},{property="Y",ease="Linear",value=trainProps["stopY"]+2.85+trainProps["offset"]}},duration=0}
             Net.animate_player_properties(player_id, keyframes) 
         elseif direction == "UL" then
-            local keyframes = {{properties={{property="Animation",value="WALK_DL"},{property="X",ease="Linear",value=(trainProps["stopX"]+2.15)},{property="Y",ease="Linear",value=(trainProps["stopY"]+1.4)}},duration=0}}
-            keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_DL"},{property="X",ease="Linear",value=trainProps["stopX"]+2.40},{property="Y",ease="Linear",value=trainProps["stopY"]+2.7}},duration=1}
-            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_DL"},{property="X",ease="Linear",value=trainProps["stopX"]+2.40},{property="Y",ease="Linear",value=trainProps["stopY"]+2.7}},duration=0}
+            local keyframes = {{properties={{property="Animation",value="WALK_DL"},{property="X",ease="Linear",value=(trainProps["stopX"]+2.15+trainProps["offset"])},{property="Y",ease="Linear",value=(trainProps["stopY"]+1.4+trainProps["offset"])}},duration=0}}
+            keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_DL"},{property="X",ease="Linear",value=trainProps["stopX"]+2.40+trainProps["offset"]},{property="Y",ease="Linear",value=trainProps["stopY"]+2.7+trainProps["offset"]}},duration=1}
+            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_DL"},{property="X",ease="Linear",value=trainProps["stopX"]+2.40+trainProps["offset"]},{property="Y",ease="Linear",value=trainProps["stopY"]+2.7+trainProps["offset"]}},duration=0}
             Net.animate_player_properties(player_id, keyframes) 
         elseif direction == "UR" then
-            local keyframes = {{properties={{property="Animation",value="WALK_DR"},{property="X",ease="Linear",value=(trainProps["stopX"]+1.4)},{property="Y",ease="Linear",value=(trainProps["stopY"]+2.4)}},duration=0}}
-            keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_DR"},{property="X",ease="Linear",value=trainProps["stopX"]+2.6},{property="Y",ease="Linear",value=trainProps["stopY"]+2.55}},duration=1}
-            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_DR"},{property="X",ease="Linear",value=trainProps["stopX"]+2.6},{property="Y",ease="Linear",value=trainProps["stopY"]+2.55}},duration=0}
+            local keyframes = {{properties={{property="Animation",value="WALK_DR"},{property="X",ease="Linear",value=(trainProps["stopX"]+1.4+trainProps["offset"])},{property="Y",ease="Linear",value=(trainProps["stopY"]+2.4+trainProps["offset"])}},duration=0}}
+            keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_DR"},{property="X",ease="Linear",value=trainProps["stopX"]+2.6+trainProps["offset"]},{property="Y",ease="Linear",value=trainProps["stopY"]+2.55+trainProps["offset"]}},duration=1}
+            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_DR"},{property="X",ease="Linear",value=trainProps["stopX"]+2.6+trainProps["offset"]},{property="Y",ease="Linear",value=trainProps["stopY"]+2.55+trainProps["offset"]}},duration=0}
             Net.animate_player_properties(player_id, keyframes) 
         elseif direction == "DL" then
-            local keyframes = {{properties={{property="Animation",value="WALK_DR"},{property="X",ease="Linear",value=(trainProps["stopX"]+1.3)},{property="Y",ease="Linear",value=(trainProps["stopY"]+1.05)}},duration=0}}
-            keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_DR"},{property="X",ease="Linear",value=trainProps["stopX"]+2.5},{property="Y",ease="Linear",value=trainProps["stopY"]+1.05}},duration=1}
-            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_DR"},{property="X",ease="Linear",value=trainProps["stopX"]+2.5},{property="Y",ease="Linear",value=trainProps["stopY"]+1.05}},duration=0}
+            local keyframes = {{properties={{property="Animation",value="WALK_DR"},{property="X",ease="Linear",value=(trainProps["stopX"]+1.3+trainProps["offset"])},{property="Y",ease="Linear",value=(trainProps["stopY"]+1.05+trainProps["offset"])}},duration=0}}
+            keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_DR"},{property="X",ease="Linear",value=trainProps["stopX"]+2.5+trainProps["offset"]},{property="Y",ease="Linear",value=trainProps["stopY"]+1.05+trainProps["offset"]}},duration=1}
+            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_DR"},{property="X",ease="Linear",value=trainProps["stopX"]+2.5+trainProps["offset"]},{property="Y",ease="Linear",value=trainProps["stopY"]+1.05+trainProps["offset"]}},duration=0}
             Net.animate_player_properties(player_id, keyframes) 
 
         end 
@@ -434,15 +435,15 @@ function summon_departing_passenger_train(player_id,post_id)
             end 
             --Spawning Train Bots
             local driver_id = train.name..'-driver-'..area_id
-            local driver = Net.create_bot(driver_id,{name="", area_id=area_id, texture_path=trainProps["Driver Texture"], animation_path=trainProps["Driver Animation"], x=trainProps["startX"], y=trainProps["startY"], z=trainProps["startZ"], solid=false,warp_in=false })
+            local driver = Net.create_bot(driver_id,{name="", area_id=area_id, texture_path=trainProps["Driver Texture"], animation_path=trainProps["Driver Animation"], x=trainProps["startX"], y=trainProps["startY"], z=trainProps["trainZ"], solid=false,warp_in=false })
             local car_id = train.name..'-car-'..area_id
-            local driver = Net.create_bot(car_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/"..trainProps["Color"].."_car.png", animation_path="/server/assets/indy-trains/"..trainProps["Color"].."_car.animation", x=trainProps["startX"], y=trainProps["startY"], z=trainProps["startZ"], solid=false,warp_in=false })
+            local driver = Net.create_bot(car_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/"..trainProps["Color"].."_car.png", animation_path="/server/assets/indy-trains/"..trainProps["Color"].."_car.animation", x=trainProps["startX"], y=trainProps["startY"], z=trainProps["trainZ"], solid=false,warp_in=false })
             local engine_id = train.name..'-engine-'..area_id
-            local driver = Net.create_bot(engine_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/"..trainProps["Color"].."_train.png", animation_path="/server/assets/indy-trains/"..trainProps["Color"].."_train.animation", x=trainProps["startX"], y=trainProps["startY"], z=trainProps["startZ"], solid=false,warp_in=false })
+            local driver = Net.create_bot(engine_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/"..trainProps["Color"].."_train.png", animation_path="/server/assets/indy-trains/"..trainProps["Color"].."_train.animation", x=trainProps["startX"], y=trainProps["startY"], z=trainProps["trainZ"], solid=false,warp_in=false })
             local pedestal_id = train.name..'-pedestal-'..area_id
             
             if direction == "DR" or direction == "DL" then
-                pedestal = Net.create_bot(pedestal_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/pedestal.png", animation_path="/server/assets/indy-trains/pedestal_"..trainProps["Color"]..".animation", x=trainProps["startX"], y=trainProps["startY"], z=trainProps["startZ"], solid=false,warp_in=false })
+                pedestal = Net.create_bot(pedestal_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/pedestal.png", animation_path="/server/assets/indy-trains/pedestal_"..trainProps["Color"]..".animation", x=trainProps["startX"], y=trainProps["startY"], z=trainProps["trainZ"], solid=false,warp_in=false })
             end
 
             local start_to_stop = trainProps["Duration Start to Stop"]
@@ -470,7 +471,7 @@ function summon_departing_passenger_train(player_id,post_id)
 
             --Light Path Animation
             local lightpath_id = train.name..'-light-'..area_id
-            local lightpath = Net.create_bot(lightpath_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/lightpath.png", animation_path="/server/assets/indy-trains/lightpath_"..trainProps["Color"]..".animation", x=trainProps["stopX"]+.5+light_offset_x, y=trainProps["stopY"]+.5+light_offset_y, z=trainProps["stopZ"], solid=false,warp_in=false })
+            local lightpath = Net.create_bot(lightpath_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/lightpath.png", animation_path="/server/assets/indy-trains/lightpath_"..trainProps["Color"]..".animation", x=trainProps["stopX"]+.5+light_offset_x, y=trainProps["stopY"]+.5+light_offset_y, z=trainProps["trainZ"], solid=false,warp_in=false })
 
             local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",value=trainProps["stopX"]+.5+light_offset_x},{property="Y",value=trainProps["stopY"]+.5+light_offset_y}},duration=0}}
             keyframes[#keyframes+1] = {properties={{property="X",ease="Linear",value=trainProps["stopX"]+.5+light_offset_x},{property="Y",ease="Linear",value=trainProps["stopY"]+.5+light_offset_y}},duration=0}
@@ -486,7 +487,7 @@ function summon_departing_passenger_train(player_id,post_id)
             if direction == "DR" then --DONE
                 --Animation for Player Boarding Train
                 local keyframes = {{properties={{property="Animation",value="WALK_UR"},{property="X",ease="Linear",value=player_position.x},{property="Z",ease="Linear",value=player_position.z},{property="Y",ease="Linear",value=player_position.y}},duration=0}}
-                keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_UR"},{property="X",ease="Linear",value=(trainProps["stopX"]+1)},{property="Y",ease="Linear",value=(trainProps["stopY"]+1.35)}},duration=1}
+                keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_UR"},{property="X",ease="Linear",value=(trainProps["stopX"]+1+trainProps["offset"])},{property="Y",ease="Linear",value=(trainProps["stopY"]+1.35+trainProps["offset"])}},duration=1}
                 keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction}},duration=0}
                 Net.animate_player_properties(player_id, keyframes) 
                 await(Async.sleep(1.25))
@@ -494,49 +495,49 @@ function summon_departing_passenger_train(player_id,post_id)
                 await(Async.sleep(.25))
 
                 --Animation for Train and Player Departing Platform
-                local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=(trainProps["stopX"]+1.5-.5)},{property="Y",ease="In",value=(trainProps["stopY"]+1.35)}},duration=0}}
-                keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+1.5-.5},{property="Y",ease="In",value=trainProps["endY"]+1.35}},duration=stop_to_end}
+                local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=(trainProps["stopX"]+1.5-.5+trainProps["offset"])},{property="Y",ease="In",value=(trainProps["stopY"]+1.35+trainProps["offset"])}},duration=0}}
+                keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+1.5-.5+trainProps["offset"]},{property="Y",ease="In",value=trainProps["endY"]+1.35+trainProps["offset"]}},duration=stop_to_end}
                 Net.animate_player_properties(player_id, keyframes) 
 
             elseif direction == "UL" then --DONE
                 --Animation for Player Boarding Train
                 local keyframes =         {{properties={{property="Animation",value="WALK_UR"},{property="X",ease="Linear",value=player_position.x},{property="Z",ease="Linear",value=player_position.z},{property="Y",ease="Linear",value=player_position.y}},duration=0}}
-                keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_UR"},{property="X",ease="Linear",value=(trainProps["stopX"]+2.15)},{property="Y",ease="Linear",value=(trainProps["stopY"]+1.4)}},duration=1}
+                keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_UR"},{property="X",ease="Linear",value=(trainProps["stopX"]+2.15+trainProps["offset"])},{property="Y",ease="Linear",value=(trainProps["stopY"]+1.4+trainProps["offset"])}},duration=1}
                 keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction}},duration=0}
                 Net.animate_player_properties(player_id, keyframes) 
                 await(Async.sleep(1.25))
                 Net.remove_bot(lightpath_id,false)
                 await(Async.sleep(.25))
                 --Animation for Train and Player Departing Platform
-                local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=(trainProps["stopX"]+2.15)},{property="Y",ease="In",value=(trainProps["stopY"]+1.4)}},duration=0}}
-                keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+2.15},{property="Y",ease="In",value=trainProps["endY"]+1.4}},duration=stop_to_end}
+                local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=(trainProps["stopX"]+2.15+trainProps["offset"])},{property="Y",ease="In",value=(trainProps["stopY"]+1.4+trainProps["offset"])}},duration=0}}
+                keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+2.15+trainProps["offset"]},{property="Y",ease="In",value=trainProps["endY"]+1.4+trainProps["offset"]}},duration=stop_to_end}
                 Net.animate_player_properties(player_id, keyframes) 
 
             elseif direction == "UR" then
                 --Animation for Player Boarding Train
                 local keyframes =         {{properties={{property="Animation",value="WALK_UL"},{property="X",ease="Linear",value=player_position.x},{property="Z",ease="Linear",value=player_position.z},{property="Y",ease="Linear",value=player_position.y}},duration=0}}
-                keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_UL"},{property="X",ease="Linear",value=(trainProps["stopX"]+1.4)},{property="Y",ease="Linear",value=(trainProps["stopY"]+2.4)}},duration=1}
+                keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_UL"},{property="X",ease="Linear",value=(trainProps["stopX"]+1.4+trainProps["offset"])},{property="Y",ease="Linear",value=(trainProps["stopY"]+2.4+trainProps["offset"])}},duration=1}
                 keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction}},duration=0}
                 Net.animate_player_properties(player_id, keyframes) 
                 await(Async.sleep(1.25))
                 Net.remove_bot(lightpath_id,false)
                 await(Async.sleep(.25))
                 --Animation for Train and Player Departing Platform
-                local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=(trainProps["stopX"]+1.4)},{property="Y",ease="In",value=(trainProps["stopY"]+2.4)}},duration=0}}
-                keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+1.4},{property="Y",ease="In",value=trainProps["endY"]+2.4}},duration=stop_to_end}
+                local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=(trainProps["stopX"]+1.4+trainProps["offset"])},{property="Y",ease="In",value=(trainProps["stopY"]+2.4+trainProps["offset"])}},duration=0}}
+                keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+1.4+trainProps["offset"]},{property="Y",ease="In",value=trainProps["endY"]+2.4+trainProps["offset"]}},duration=stop_to_end}
                 Net.animate_player_properties(player_id, keyframes) 
             elseif direction == "DL" then
                 --Animation for Player Boarding Train
                 local keyframes =         {{properties={{property="Animation",value="WALK_UL"},{property="X",ease="Linear",value=player_position.x},{property="Z",ease="Linear",value=player_position.z},{property="Y",ease="Linear",value=player_position.y}},duration=0}}
-                keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_UL"},{property="X",ease="Linear",value=(trainProps["stopX"]+1.3)},{property="Y",ease="Linear",value=(trainProps["stopY"]+1.05)}},duration=1}
+                keyframes[#keyframes+1] = {properties={{property="Animation",value="WALK_UL"},{property="X",ease="Linear",value=(trainProps["stopX"]+1.3+trainProps["offset"])},{property="Y",ease="Linear",value=(trainProps["stopY"]+1.05+trainProps["offset"])}},duration=1}
                 keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction}},duration=0}
                 Net.animate_player_properties(player_id, keyframes) 
                 await(Async.sleep(1.25))
                 Net.remove_bot(lightpath_id,false)
                 await(Async.sleep(.25))
                 --Animation for Train and Player Departing Platform
-                local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=(trainProps["stopX"]+1.3)},{property="Y",ease="In",value=(trainProps["stopY"]+1.05)}},duration=0}}
-                keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+1.3},{property="Y",ease="In",value=trainProps["endY"]+1.05}},duration=stop_to_end}
+                local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=(trainProps["stopX"]+1.3+trainProps["offset"])},{property="Y",ease="In",value=(trainProps["stopY"]+1.05+trainProps["offset"])}},duration=0}}
+                keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+1.3+trainProps["offset"]},{property="Y",ease="In",value=trainProps["endY"]+1.05+trainProps["offset"]}},duration=stop_to_end}
                 Net.animate_player_properties(player_id, keyframes) 
 
             end 
@@ -584,15 +585,15 @@ function summon_departing_passenger_train(player_id,post_id)
                 track_cache[destination_id][train_name]['occupied'] = true
             
                 if direction == "DR" then
-                    Net.transfer_player(player_id, destination_id, false, destination_trainProps["startX"]+1,destination_trainProps["startY"]+1.5,destination_trainProps["startZ"]+3, direction)    
+                    Net.transfer_player(player_id, destination_id, false, destination_trainProps["startX"]+1,destination_trainProps["startY"]+1.5,destination_trainProps["platformZ"], direction)    
                 elseif direction == "UL" then
-                    Net.transfer_player(player_id, destination_id, false, destination_trainProps["startX"]+2.15,destination_trainProps["startY"]+1.4,destination_trainProps["startZ"]+3, direction)    
+                    Net.transfer_player(player_id, destination_id, false, destination_trainProps["startX"]+2.15,destination_trainProps["startY"]+1.4,destination_trainProps["platformZ"], direction)    
 
                 elseif direction == "UR" then
-                    Net.transfer_player(player_id, destination_id, false, destination_trainProps["startX"]+1.4,destination_trainProps["startY"]+2.4,destination_trainProps["startZ"]+3, direction)    
+                    Net.transfer_player(player_id, destination_id, false, destination_trainProps["startX"]+1.4,destination_trainProps["startY"]+2.4,destination_trainProps["platformZ"], direction)    
 
                 elseif direction == "DL" then
-                    Net.transfer_player(player_id, destination_id, false, destination_trainProps["startX"]+1.3,destination_trainProps["startY"]+1.05,destination_trainProps["startZ"]+3, direction)    
+                    Net.transfer_player(player_id, destination_id, false, destination_trainProps["startX"]+1.3,destination_trainProps["startY"]+1.05,destination_trainProps["platformZ"], direction)    
 
                 end 
             --Handle an Server-to-Server transfer
@@ -663,6 +664,11 @@ function validate_passenger_train(area_id,train_name)
     startPoint = train.custom_properties["Start"]:gsub("%^ ", "")
     endPoint = train.custom_properties["End"]:gsub("%^ ", "")
     stopPoint = train.custom_properties["Stop"]:gsub("%^ ", "")
+    trainZ = tonumber(train.custom_properties["Train Z"])
+    platformZ = tonumber(train.custom_properties["Platform Z"])
+    train.custom_properties["offset"] = (platformZ - 3 - trainZ) * .5
+    -- Animations were configured with a Z offset of 3
+    -- The "offset" value adjusts all player animations in case the offset is not 3. 
 
     direction = train.custom_properties["Direction"]
     if not train.custom_properties["Color"] then
@@ -679,13 +685,10 @@ function validate_passenger_train(area_id,train_name)
     startPoints = splitter(startPoint,",")
     startX = tonumber(startPoints[1])
     startY = tonumber(startPoints[2])
-    startZ = tonumber(startPoints[3])
     endX = tonumber(endPoints[1])
     endY = tonumber(endPoints[2])
-    endZ = tonumber(endPoints[3])
     stopX = tonumber(stopPoints[1])
     stopY = tonumber(stopPoints[2])
-    stopZ = tonumber(stopPoints[3])
     distance = 0
     start_to_stop = 0
     stop_to_end = 0
@@ -715,13 +718,12 @@ function validate_passenger_train(area_id,train_name)
     train.custom_properties["Duration Stop to End"] = stop_to_end
     train.custom_properties["startX"] = startX
     train.custom_properties["startY"] = startY
-    train.custom_properties["startZ"] = startZ
     train.custom_properties["endX"] = endX
     train.custom_properties["endY"] = endY
-    train.custom_properties["endZ"] = endZ
     train.custom_properties["stopX"] = stopX
     train.custom_properties["stopY"] = stopY
-    train.custom_properties["stopZ"] = stopZ
+    train.custom_properties["trainZ"] = trainZ
+    train.custom_properties["platformZ"] = platformZ
 
     train_cache[area_id][train_name] = train
 end
@@ -856,7 +858,7 @@ function validate_cargo_train(area_id,train_name)
     for i, prop_name in pairs(cargo_train_required_properties) do
         if not train.custom_properties[prop_name] then
             print('   Train \''..train.name..'\' was not created because the custom property '..prop_name..' is required.')
-            train.remove()
+            train_cache[area_id][train_name].remove()
             return false
         else
         print('   '..prop_name..' = '..train.custom_properties[prop_name])
@@ -912,10 +914,9 @@ function validate_cargo_train(area_id,train_name)
     startPoints = splitter(startPoint,",")
     startX = tonumber(startPoints[1])
     startY = tonumber(startPoints[2])
-    startZ = tonumber(startPoints[3])
+    trainZ = tonumber(train.custom_properties["Train Z"])
     endX = tonumber(endPoints[1])
     endY = tonumber(endPoints[2])
-    endZ = tonumber(endPoints[3])
 
     distance = 0
     if startY > endY then
@@ -932,20 +933,20 @@ function validate_cargo_train(area_id,train_name)
     train.custom_properties["Duration"] = duration
     train.custom_properties["startX"] = startX
     train.custom_properties["startY"] = startY
-    train.custom_properties["startZ"] = startZ
     train.custom_properties["endX"] = endX
     train.custom_properties["endY"] = endY
-    train.custom_properties["endZ"] = endZ
+    train.custom_properties["trainZ"] = trainZ
+
     next_schedule = #cargo_schedule+1
     cargo_schedule[next_schedule] = {name=train_name,area=area_id,duration=duration,remaining=0}
 
     -- we will eventually need logic here to select proper driver, color, car length, and cargo
     local driver_id = train.name..'-driver-'..area_id
-    local driver = Net.create_bot(driver_id,{name="", area_id=area_id, texture_path=train.custom_properties["Driver Texture"], animation_path=train.custom_properties["Driver Animation"], x=startX, y=startY, z=startZ, solid=false,warp_in=false })
+    local driver = Net.create_bot(driver_id,{name="", area_id=area_id, texture_path=train.custom_properties["Driver Texture"], animation_path=train.custom_properties["Driver Animation"], x=startX, y=startY, z=trainZ, solid=false,warp_in=false })
     local car_id = train.name..'-car-'..area_id
-    local driver = Net.create_bot(car_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/"..train.custom_properties["Color"].."_car.png", animation_path="/server/assets/indy-trains/"..train.custom_properties["Color"].."_car.animation", x=startX, y=startY, z=startZ, solid=false,warp_in=false })
+    local driver = Net.create_bot(car_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/"..train.custom_properties["Color"].."_car.png", animation_path="/server/assets/indy-trains/"..train.custom_properties["Color"].."_car.animation", x=startX, y=startY, z=trainZ, solid=false,warp_in=false })
     local engine_id = train.name..'-engine-'..area_id
-    local driver = Net.create_bot(engine_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/"..train.custom_properties["Color"].."_train.png", animation_path="/server/assets/indy-trains/"..train.custom_properties["Color"].."_train.animation", x=startX, y=startY, z=startZ, solid=false,warp_in=false })
+    local driver = Net.create_bot(engine_id,{name="", area_id=area_id, texture_path="/server/assets/indy-trains/"..train.custom_properties["Color"].."_train.png", animation_path="/server/assets/indy-trains/"..train.custom_properties["Color"].."_train.animation", x=startX, y=startY, z=trainZ, solid=false,warp_in=false })
 
     if direction == "DR" or direction == "DL" then
     --Net.create_bot() --pedestal NPC (if down_left or down_right for Direction)
@@ -1045,7 +1046,6 @@ end)
 
 Net:on("player_area_transfer", function(event)
     -- checks if a player is currently ridding a train
-    print(passenger_cache[event.player_id]['intransit'])
     if passenger_cache[event.player_id]['intransit'] == true then
         --calls function to grab transferred player, place them on the train, and drop off at platform 
         summon_arriving_passenger_train(event.player_id)
@@ -1069,7 +1069,7 @@ Net:on("player_request", function(event)
                 --checks if requested train exists in requested area exists
                 if train_cache[destination_area][train_name] then
                     local destination_trainProps = train_cache[destination_area][train_name].custom_properties
-                    Net.transfer_player(event.player_id, destination_area, false, destination_trainProps["startX"]+1,destination_trainProps["startY"]+1.5,destination_trainProps["startZ"]+3, direction)    
+                    Net.transfer_player(event.player_id, destination_area, false, destination_trainProps["startX"]+1,destination_trainProps["startY"]+1.5,destination_trainProps["platformZ"], direction)    
                     if not track_cache[destination_area] then 
                         track_cache[destination_area] = {}
                     end
