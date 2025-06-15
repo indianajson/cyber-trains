@@ -39,9 +39,10 @@ Cargo Trains run along a straight path on a loop and do not have any interaction
 > `Color` changes the train's appearance.<br>
 > `Speed` can be increased to make the train move faster (1 = default, 1.5 is 50% faster, 2 is 100% faster, etc.) <br>
 > `Direction` select which direction the train is traveling.<br>
-> `Start Point` provide a x,y,z tile position (hover over a tile and look in the bottom left of Tiled to see X and Y).<br>
+> `Train Z` provide the Z (layer) where the train should spawn.<br>
 >  &nbsp; &nbsp; For the bottom most layer, Z equals 0 and goes up by 1 as you move upward.<br>
-> `End Point` provide a x,y,z tile position (hover over a tile and look in the bottom left of Tiled to see X and Y).<br>
+> `Start Point` provide a x,y tile position (hover over a tile and look in the bottom left of Tiled to see X and Y).<br>
+> `End Point` provide a x,y tile position (hover over a tile and look in the bottom left of Tiled to see X and Y).<br>
 > `Driver Texture` path to image file for your Driver NPC (optionaL). <br>
 > `Driver Animation` path to .animation file for your Driver NPC (optional). <br>
 > `Cargo Texture` (NOT IMPLEMENTED) path to image file for your cargo/passenger NPC (optional). <br>
@@ -69,11 +70,15 @@ Passenger Trains can transport players between areas within a server or to compl
 > `Color` changes the train's appearance.<br>
 > `Speed` can be increased to make the train move faster (1 = default, 1.5 is 50% faster, 2 is 100% faster, etc.) <br>
 > `Direction` select which direction the train is traveling.<br>
-> `Start Point` provide a x,y,z tile position (hover over a tile and look in the bottom left of Tiled to see X and Y).<br>
+> `Train Z` provide the Z (layer) where the train should spawn.<br>
 >  &nbsp; &nbsp; For the bottom most layer, Z equals 0 and goes up by 1 as you move upward.<br>
+>  &nbsp; &nbsp; Your train should be at least -3 from your Platform Z or it will glitch visually.<br>
+> `Platform Z` provide the Z (layer) where the conductor stands.<br>
+>  &nbsp; &nbsp; For the bottom most layer, Z equals 0 and goes up by 1 as you move upward.<br>
+> `Start Point` provide a x,y tile position (hover over a tile and look in the bottom left of Tiled to see X and Y).<br>
 >  &nbsp; &nbsp; This is where the train spawns, it should not be visible from the walkable parts of your area.<br>
-> `Stop Point` provide a x,y,z tile position (this is where the train picks up passengers, you may have to tweak a few times).<br>
-> `End Point` provide a x,y,z tile position (this is where the train despawns, should not be visible walking around the area).<br>
+> `Stop Point` provide a x,y tile position (this is where the train picks up passengers, you may have to tweak a few times).<br>
+> `End Point` provide a x,y tile position (this is where the train despawns, should not be visible walking around the area).<br>
 > `Driver Texture` path to image file for your Driver NPC (optional). <br>
 > `Driver Animation` path to .animation file for your Driver NPC (optional). <br>
 > `Cargo Texture` path to image file for your cargo/passenger NPC (optional). <br>
@@ -133,4 +138,5 @@ Yes, if you want to add a row of text that doesn't send someone to a destination
 Coding - Indiana<br>
 Cyber Metro Sprite - Indiana<br>
 Conductor Prog Sprite - CyanMan.EXE<br>
+Conductor Prog Mug - D3str0y3d<br>
 Train Sound Effects - DJRezzed/Enzan<br>
