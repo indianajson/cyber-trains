@@ -1,16 +1,21 @@
 print("[trains] Starting Indy's Trains")
 -- CODER'S NOTE: When using keyframes, your await() must be 1/2 second longer than your duration or the player/bot won't arrive before the next animation starts.
 
--- NEXT STEPS
-   -- finish Github documentation
+
+-- v1 remaining
+   -- Fix Github documentation (?)
    -- Fix splitter to not ignore double string as delimiter (as opposed to single character)
--- v2 features
+   -- Make z-index off new variable "Platform Z" so we can make the z difference dynamic. 
+
+-- v1.1 features
 -- Cargo Train Enhancements
     -- Add pedestal
     -- Add cargo NPC
 -- Animation Smoothing
     -- We may need to add extra key frames to arrival and departure to smooth arrival speed.
     -- Jitter is a bit annoying. 
+
+-- v2 features
 -- multi-car cargo trains (a matter of making scalable offset values and handling for cars to animate)
     -- make custom properties Cargo be a comma seperated value if cars is greater than 1
 -- timed passenger trains (arrives and departs on a schedule, need to have multi-car implemented.)
