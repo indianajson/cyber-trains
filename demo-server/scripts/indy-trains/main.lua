@@ -709,9 +709,11 @@ function validate_passenger_train(area_id,train_name)
         start_to_stop = stopX - startX
         stop_to_end = endX - stopX
     end
+    -- 30 blocks * (.25 / 1) = 7.5
+    -- 30 * (.25 * 3) = 2.5
     duration = distance * (.25 / train.custom_properties["Speed"])
-    start_to_stop = start_to_stop * .25 * train.custom_properties["Speed"]
-    stop_to_end = stop_to_end * .25 * train.custom_properties["Speed"]
+    start_to_stop = start_to_stop * (.25 / train.custom_properties["Speed"])
+    stop_to_end = stop_to_end * (.25 / train.custom_properties["Speed"])
     train.custom_properties["Distance"] = distance
     train.custom_properties["Duration"] = duration
     train.custom_properties["Duration Start to Stop"] = start_to_stop
