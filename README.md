@@ -135,8 +135,9 @@ Yes, if you want to add a row of text that doesn't send someone to a destination
 &nbsp; <br>
 ### Credits
 
-Coding - Indiana<br>
-Cyber Metro Sprite - Indiana<br>
-Conductor Prog Sprite - CyanMan.EXE<br>
-Conductor Prog Mug - D3str0y3d<br>
+Coding - [Indiana](http://github.com/indianajson/open-assets)<br>
+Cyber Metro Sprite - [Indiana](http://github.com/indianajson/open-assets)<br>
+Conductor Prog Sprite - [CyanMan.EXE](http://github.com/CyanmanEXE/)<br>
+Conductor Prog Mug - [D3str0y3d](http://github.com/ninjaman255)<br>
 Train Sound Effects - DJRezzed/Enzan<br>
+Beta Testing - [D3str0y3d](http://github.com/ninjaman255)<br>
