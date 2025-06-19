@@ -10,7 +10,7 @@ A script to add customizable cyber metro trains (from BN3/EXE3) to Open Net Batt
 
 ### Want to try it out? 
 
-> This repository is a complete test server you can spin up that includes configured examples for both types of trains and the conductor. It will show you how they should be configured and how they function in-game without having to do the setup yourself. 
+> You can see the trains in action right now on the BN3 server: `159.223.165.219:3000` or this repository is a complete test server you can spin up that includes configured examples for both types of trains and the conductor. It will show you how they should be configured and how they function in-game without having to do the setup yourself. 
 
 ### How do I install this on my ONB server? 
 
@@ -20,7 +20,7 @@ A script to add customizable cyber metro trains (from BN3/EXE3) to Open Net Batt
 > 4. Copy `indys-trains-tiled.js` to your Tiled extension folder.
 > <br> (in Tiled go to Settings, select Plugins, then click "Open..." below Extensions).
 
-Note: The Tiled extension is only compatible with Tiled 1.9 and newer. If you're using an older version upgrade (1.11.2 works fine with ONB) or configure trains manually. You will need to look at the demo server configurations to underatand the setup because the documentation here is written based on the extension. 
+Note: The Tiled extension is only compatible with Tiled 1.9 and newer. If you're using an older version upgrade (1.11.2 works fine with ONB) or configure trains manually. You will need to look at the demo server configurations to understand the setup because the documentation here is written based on the extension. 
 
 ### What's included in this script? 
 
@@ -135,8 +135,9 @@ Yes, if you want to add a row of text that doesn't send someone to a destination
 &nbsp; <br>
 ### Credits
 
-Coding - Indiana<br>
-Cyber Metro Sprite - Indiana<br>
-Conductor Prog Sprite - CyanMan.EXE<br>
-Conductor Prog Mug - D3str0y3d<br>
+Coding - [Indiana](http://github.com/indianajson/open-assets)<br>
+Cyber Metro Sprite - [Indiana](http://github.com/indianajson/open-assets)<br>
+Conductor Prog Sprite - [CyanMan.EXE](http://github.com/CyanmanEXE/)<br>
+Conductor Prog Mug - [D3str0y3d](http://github.com/ninjaman255)<br>
 Train Sound Effects - DJRezzed/Enzan<br>
+Beta Testing - [D3str0y3d](http://github.com/ninjaman255)<br>
