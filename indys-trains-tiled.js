@@ -155,10 +155,12 @@ function addCargoTrain() {
     var speedField = dialog.addTextInput("Speed", "1");
     // Direction dropdown
     var directionBox = dialog.addComboBox("Direction", ["Down Right", "Down Left", "Up Right", "Up Left"]);
-    // Start, End Points
-    var startField = dialog.addTextInput("Start Point (X,Y,Z)", "");
+    var zField = dialog.addTextInput("Train Position (Z)", "");
     dialog.addNewRow()
-    var endField = dialog.addTextInput("End Point (X,Y,Z)", "");
+    // Start, End Points
+    var startField = dialog.addTextInput("Start Point (X,Y)", "");
+    dialog.addNewRow()
+    var endField = dialog.addTextInput("End Point (X,Y)", "");
     dialog.addNewRow()
     // Driver texture & animation
     var driverTextureField = dialog.addTextInput("Driver Texture (optional)", "");
@@ -222,6 +224,7 @@ function addCargoTrain() {
         // Set custom properties
         obj.setProperty("Color", colorBox.currentText);
         obj.setProperty("Speed", speedField.text);
+        obj.setProperty("Train Z", zField.currentText);
         obj.setProperty("Direction", directionBox.currentText);
         obj.setProperty("Start", startField.text);
         obj.setProperty("End", endField.text);
@@ -265,18 +268,32 @@ function addPassengerTrain() {
     var dialog = new Dialog("Configure Passenger Train");
     // Train ID
     var idField = dialog.addTextInput("Train Name", "");
+    dialog.addNewRow()
+    dialog.addLabel("Use the same name for trains connected between different areas.");
+    dialog.addNewRow()
+
     // Color dropdown
     var colorBox = dialog.addComboBox("Color", ["Orange", "Red", "Green", "Blue", "Cyan", "Gray"]);
     // Speed
     var speedField = dialog.addTextInput("Speed", "1");
     // Direction dropdown
     var directionBox = dialog.addComboBox("Direction", ["Down Right", "Down Left", "Up Right", "Up Left"]);
+    dialog.addNewRow()
+    var platZField = dialog.addTextInput("Platform Z", "");
+    dialog.addNewRow()
+    dialog.addLabel("   The Z of the layer where conductor is standing");
+    dialog.addNewRow()
+    var trainZField = dialog.addTextInput("Train Z", "");
+    dialog.addNewRow()
+    dialog.addLabel("   The Z of the layer where train spawns (must be at least -2 of platform)");
+    dialog.addNewRow()
+
     // Start, Stop, End points
-    var startField = dialog.addTextInput("Start Point (X,Y,Z)", "");
+    var startField = dialog.addTextInput("Start Point (X,Y)", "");
     dialog.addNewRow()
-    var stopField = dialog.addTextInput("Station Stop (X,Y,Z)", "");
+    var stopField = dialog.addTextInput("Station Stop (X,Y)", "");
     dialog.addNewRow()
-    var endField = dialog.addTextInput("End Point (X,Y,Z)", "");
+    var endField = dialog.addTextInput("End Point (X,Y)", "");
     dialog.addNewRow()
     // Driver texture & animation
     var driverTextureField = dialog.addTextInput("Driver Texture (optional)", "");
@@ -339,6 +356,8 @@ function addPassengerTrain() {
         obj.setProperty("Color", colorBox.currentText);
         obj.setProperty("Speed", speedField.text);
         obj.setProperty("Direction", directionBox.currentText);
+        obj.setProperty("Train Z", trainZField.currentText);
+        obj.setProperty("Platform Z", platZField.currentText);
         obj.setProperty("Start", startField.text);
         obj.setProperty("Stop", stopField.text);
         obj.setProperty("End", endField.text);
@@ -368,7 +387,7 @@ function checkXYZ(textValue) {
         }
     }
 
-    return commaCount === 2 && dotCount <= 3;
+    return commaCount === 1 && dotCount <= 2;
 }
 function checkSpeed(textValue) {
   return /^[0-9]*\.?[0-9]*$/.test(textValue) && 
