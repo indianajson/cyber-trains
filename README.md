@@ -18,7 +18,7 @@ A script to add customizable cyber metro trains (from BN3/EXE3) to Open Net Batt
 > 2. Copy `/assets/indy-trains/` to your server’s asset folder. 
 > 3. Copy `/scripts/indy-trains/` to your server’s script folder. 
 > 4. Copy `indys-trains-tiled.js` to your Tiled extension folder.
-> <br> (in Tiled go to Settings, select Plugins, then click "Open..." below Extensions).
+> <br> (in Tiled go to `Preferences...` (Ctrl + ,), select Plugins, then click "Open..." below Extensions).
 
 Note: The Tiled extension is only compatible with Tiled 1.9 and newer. If you're using an older version upgrade (1.11.2 works fine with ONB) or configure trains manually. You will need to look at the demo server configurations to understand the setup because the documentation here is written based on the extension. 
 
