@@ -4,8 +4,6 @@ print("[trains] Starting Indy's Trains")
 
 -- v1 remaining
    -- Fix Github documentation (?)
-   -- Fix splitter to not ignore double string as delimiter (as opposed to single character)
-   -- Make z-index off new variable "Platform Z" so we can make the z difference dynamic. 
 
 -- v1.1 features
 -- Cargo Train Enhancements
@@ -120,10 +118,14 @@ end
 --purpose: to spawn a train, pickup player, and depart (if track is not already occupied)
 function summon_arriving_passenger_train(player_id)
     return async(function ()
+        --Clear player specific cache
+
         Net.fade_player_camera(player_id, {r=0, g=0, b=0, a=255}, 0)
         Net.play_sound_for_player(player_id, "/server/assets/indy-trains/train_arrive_short.ogg")
         --prepare variables
         local train_name = passenger_cache[player_id]['train']
+        passenger_cache[player_id]['train'] = ""
+        passenger_cache[player_id]['intransit'] = false
         local area_id = Net.get_player_area(player_id)
         local train = train_cache[area_id][train_name]
         local trainProps = train.custom_properties
@@ -322,9 +324,6 @@ function summon_arriving_passenger_train(player_id)
         Net.remove_bot(driver_id,false)
         Net.remove_bot(car_id,false)
         await(Async.sleep(.5))
-        --Clear player specific cache
-        passenger_cache[player_id]['intransit'] = false
-        passenger_cache[player_id]['train'] = ""
         --Unoccupy track
         track_cache[area_id][train_name]['occupied'] = false
     end)    
@@ -1072,6 +1071,7 @@ Net:on("player_area_transfer", function(event)
     -- checks if a player is currently ridding a train
     if passenger_cache[event.player_id]['intransit'] == true then
         --calls function to grab transferred player, place them on the train, and drop off at platform 
+        passenger_cache[event.player_id]['intransit'] = false
         summon_arriving_passenger_train(event.player_id)
     end
 end)
