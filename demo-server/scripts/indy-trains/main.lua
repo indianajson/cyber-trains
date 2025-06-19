@@ -332,17 +332,12 @@ end
 
 function summon_departing_passenger_train(player_id,post_id)
 
-    player_using_train_menu[player_id] = false
-    Net.close_bbs(player_id)
-
-    if post_id == "cancel" then
-        return false
-    end 
-
     local post_data = splitter(post_id,"__")
     local train_name = post_data[1]
     local destination_id = post_data[2]
     local area_id = Net.get_player_area(player_id)
+
+    --sanitize destination_type
     local destination_type = ""
     if not post_data[3] then 
         destination_type = "area"
@@ -350,9 +345,29 @@ function summon_departing_passenger_train(player_id,post_id)
         destination_type = "area"
     elseif string.lower(post_data[3]) == "server" then
         destination_type = "server"
-    else 
+    elseif string.lower(post_data[3]) == "message" then
+        destination_type = "message"
+    elseif string.lower(post_data[3]) == "label" then
+        destination_type = "label"
+    else     
         print("Invalid destination type of \""..post_data[3].."\".")
     end 
+    --handle special destinations types
+    if destination_type == "message" then
+        local conductor = conductor_cache[area_id]['conductor-'..train_name..'-'..area_id]
+        Net.message_player(player_id, destination_id, conductor.custom_properties["Mug Texture"], conductor.custom_properties["Mug Animation"]) 
+        return false
+    end 
+    if destination_type == "label" then
+        return false
+    end 
+    player_using_train_menu[player_id] = false
+
+    Net.close_bbs(player_id)
+    if post_id == "cancel" then
+        return false
+    end 
+
     if not track_cache[area_id] then
         track_cache[area_id] = {}
         track_cache[area_id][train_name] = {}
@@ -770,6 +785,10 @@ function greet_conductor(bot_id,player_id)
     if conductorProps["1 Type"] then
         if string.lower(conductorProps["1 Type"]) == "server" then
             post_type = "__server"
+        elseif string.lower(conductorProps["1 Type"]) == "message" then
+            post_type = "__message"
+        elseif string.lower(conductorProps["1 Type"]) == "label" then
+            post_type = "__label"
         end
     else
         post_type = "__area"
@@ -780,6 +799,10 @@ function greet_conductor(bot_id,player_id)
         if conductorProps[(#posts+1).." Type"] then
             if string.lower(conductorProps[(#posts+1).." Type"]) == "server" then
                 post_type = "__server"
+            elseif string.lower(conductorProps[(#posts+1).." Type"]) == "label" then
+                post_type = "__label"
+            elseif string.lower(conductorProps[(#posts+1).." Type"]) == "message" then
+                post_type = "__message"
             end
         else
             post_type = "__area"

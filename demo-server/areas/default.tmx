@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="isometric" renderorder="right-down" width="40" height="40" tilewidth="64" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="63">
+<map version="1.10" tiledversion="1.11.2" orientation="isometric" renderorder="right-down" width="40" height="40" tilewidth="64" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="65">
  <properties>
   <property name="Background Animation" value="/server/assets/indy-trains/demo/clockman.animation"/>
   <property name="Background Texture" value="/server/assets/indy-trains/demo/clockman.png"/>
@@ -213,12 +213,18 @@
   </object>
   <object id="46" name="test2c" type="Conductor" x="791" y="597">
    <properties>
-    <property name="1 Area" value="127.0.0.1:1234,default,Test2"/>
+    <property name="1 Area" value="127.0.0.1:8765,default,Test2"/>
     <property name="1 Name" value="Local Server"/>
     <property name="1 Type" value="Server"/>
     <property name="2 Area" value="159.223.165.219:3000,default,MainTrain"/>
     <property name="2 Name" value="BN3"/>
     <property name="2 Type" value="Server"/>
+    <property name="3 Area" value="These trains run between servers. Once you board you'll be on your way!"/>
+    <property name="3 Name" value="About Trains"/>
+    <property name="3 Type" value="message"/>
+    <property name="4 Area" value="These are Server-to-Server trains!"/>
+    <property name="4 Name" value="These are Server-to-Server trains!"/>
+    <property name="4 Type" value="label"/>
     <property name="Train" value="Test2"/>
    </properties>
    <point/>
