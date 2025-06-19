@@ -98,7 +98,7 @@ function addConductor() {
                 }else{
                     obj.setProperty(i.toString()+" Area", destinations[i].text);
                     obj.setProperty(i.toString()+" Type", "Area");
-                    obj.setProperty(i.toString()+" Label", destination_label[i].text);
+                    obj.setProperty(i.toString()+" Name", destination_label[i].text);
                 }
             }else if (destination_type[i].currentText == "Server-to-Server"){
                 if (checkServer(destinations[i].text) == false){
@@ -107,7 +107,7 @@ function addConductor() {
                 }else{
                     obj.setProperty(i.toString()+" Area", destinations[i].text);
                     obj.setProperty(i.toString()+" Type", "Server");
-                    obj.setProperty(i.toString()+" Label", destination_label[i].text);
+                    obj.setProperty(i.toString()+" Name", destination_label[i].text);
                 }
             }
             
