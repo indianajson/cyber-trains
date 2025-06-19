@@ -40,7 +40,7 @@ function addConductor() {
     dialog.addNewRow();
     destination_label[area_count] = dialog.addTextInput("Destination #"+area_count.toString()+" Label", "");
     dialog.addNewRow();
-    destination_type[area_count] = dialog.addComboBox("Destination #"+area_count.toString()+" Type", ["Area-to-Area","Server-to-Server"]);
+    destination_type[area_count] = dialog.addComboBox("Destination #"+area_count.toString()+" Type", ["Area-to-Area","Server-to-Server","Message","Label"]);
     dialog.addNewRow();
     var newButton = dialog.addButton("Add Another Destination");
     //When clicked new elements are added
@@ -109,6 +109,14 @@ function addConductor() {
                     obj.setProperty(i.toString()+" Type", "Server");
                     obj.setProperty(i.toString()+" Name", destination_label[i].text);
                 }
+            }else if (destination_type[i].currentText == "Message"){
+                    obj.setProperty(i.toString()+" Area", destinations[i].text);
+                    obj.setProperty(i.toString()+" Type", "Message");
+                    obj.setProperty(i.toString()+" Name", destination_label[i].text);
+            }else if (destination_type[i].currentText == "Label"){
+                obj.setProperty(i.toString()+" Area", destinations[i].text);
+                obj.setProperty(i.toString()+" Type", "Label");
+                obj.setProperty(i.toString()+" Name", destination_label[i].text);
             }
             
         });
