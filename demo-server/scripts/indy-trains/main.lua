@@ -341,7 +341,7 @@ function summon_departing_passenger_train(player_id,post_id)
 
     local post_data = splitter(post_id,"__")
     local train_name = post_data[1]
-    local destination_id = string.lower(post_data[2])
+    local destination_id = post_data[2]
     local area_id = Net.get_player_area(player_id)
     local destination_type = ""
     if not post_data[3] then 
@@ -541,7 +541,6 @@ function summon_departing_passenger_train(player_id,post_id)
                 Net.animate_player_properties(player_id, keyframes) 
 
             end 
-            
             --Train Leaving Station Animation
             local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["stopX"]+.5+driver_offset_x},{property="Y",ease="In",value=trainProps["stopY"]+.5+driver_offset_y}},duration=0}}
             keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+.5+driver_offset_x},{property="Y",ease="In",value=trainProps["endY"]+.5+driver_offset_y}},duration=stop_to_end}
@@ -664,11 +663,11 @@ function validate_passenger_train(area_id,train_name)
     startPoint = train.custom_properties["Start"]:gsub("%^ ", "")
     endPoint = train.custom_properties["End"]:gsub("%^ ", "")
     stopPoint = train.custom_properties["Stop"]:gsub("%^ ", "")
-    trainZ = tonumber(train.custom_properties["Train Z"])
-    platformZ = tonumber(train.custom_properties["Platform Z"])
-    train.custom_properties["offset"] = (platformZ - 3 - trainZ) * .5
-    -- Animations were configured with a Z offset of 3
-    -- The "offset" value adjusts all player animations in case the offset is not 3. 
+    local trainZ = tonumber(train.custom_properties["Train Z"])
+    local platformZ = tonumber(train.custom_properties["Platform Z"])
+    
+    -- The "offset" value adjusts all player animations to accomodate the offset. 
+    train.custom_properties["offset"] = ((platformZ - trainZ) - 3) * .5 + .1
 
     direction = train.custom_properties["Direction"]
     if not train.custom_properties["Color"] then
@@ -1059,6 +1058,7 @@ Net:on("player_request", function(event)
     if event.data ~= "" then
         -- checks for data format used by train mod
         if string.find(event.data, "trains__") then
+            print(event.data)
             local post_data = splitter(event.data,"__")
             if not passenger_cache[event.player_id] then
                 passenger_cache[event.player_id] = {}
@@ -1067,7 +1067,6 @@ Net:on("player_request", function(event)
                 local train_name = post_data[3]
                 passenger_cache[event.player_id]['train'] = train_name
                 passenger_cache[event.player_id]['intransit'] = true
-                print(passenger_cache[event.player_id]['intransit'])
                 --checks if requested train exists in requested area exists
                 if train_cache[destination_area][train_name] then
                     local destination_trainProps = train_cache[destination_area][train_name].custom_properties

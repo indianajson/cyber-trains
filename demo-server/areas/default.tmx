@@ -13,6 +13,7 @@
  <tileset firstgid="11" source="../assets/indy-trains/Cyber_Rail.tsx"/>
  <tileset firstgid="12" source="../assets/indy-trains/demo/Custom_Central_Tiles.tsx"/>
  <tileset firstgid="20" source="../assets/indy-trains/platforms.tsx"/>
+ <tileset firstgid="24" source="../assets/indy-trains/Cyber_Rail_offset.tsx"/>
  <layer id="1" name="Tile Layer 0" width="40" height="40">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -212,13 +213,13 @@
   </object>
   <object id="46" name="test2c" type="Conductor" x="791" y="597">
    <properties>
-    <property name="1 Area" value="127.0.0.1:8765,default,test2"/>
+    <property name="1 Area" value="127.0.0.1:1234,default,Test2"/>
     <property name="1 Name" value="Local Server"/>
     <property name="1 Type" value="Server"/>
-    <property name="2 Area" value="keristero.xyz:8769,default,test2"/>
-    <property name="2 Name" value="Gravy Yum"/>
+    <property name="2 Area" value="159.223.165.219:3000,default,MainTrain"/>
+    <property name="2 Name" value="BN3"/>
     <property name="2 Type" value="Server"/>
-    <property name="Train" value="test2"/>
+    <property name="Train" value="Test2"/>
    </properties>
    <point/>
   </object>
@@ -242,7 +243,7 @@
    </properties>
    <point/>
   </object>
-  <object id="52" name="test2" type="Passenger Train" x="739" y="577">
+  <object id="52" name="Test2" type="Passenger Train" x="739" y="577">
    <properties>
     <property name="Color" value="Red"/>
     <property name="Direction" value="Down Right"/>
