@@ -1049,9 +1049,11 @@ end
 find_trains()
 
 Net:on("actor_interaction", function(event)
-  if string.find(event.actor_id, "conductor-") then
-    greet_conductor(event.actor_id,event.player_id)
-  end
+    if event.button == 0 then 
+        if string.find(event.actor_id, "conductor-") then
+            greet_conductor(event.actor_id,event.player_id)
+        end
+    end
 end)
 
 Net:on("player_disconnect", function(event)
