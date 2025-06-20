@@ -1075,10 +1075,12 @@ end)
 
 Net:on("player_area_transfer", function(event)
     -- checks if a player is currently ridding a train
-    if passenger_cache[event.player_id]['intransit'] == true then
-        --calls function to grab transferred player, place them on the train, and drop off at platform 
-        passenger_cache[event.player_id]['intransit'] = false
-        summon_arriving_passenger_train(event.player_id)
+    if passenger_cache[event.player_id] then 
+        if passenger_cache[event.player_id]['intransit'] == true then
+            --calls function to grab transferred player, place them on the train, and drop off at platform 
+            passenger_cache[event.player_id]['intransit'] = false
+            summon_arriving_passenger_train(event.player_id)
+        end
     end
 end)
 
