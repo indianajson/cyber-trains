@@ -295,22 +295,25 @@ function summon_arriving_passenger_train(player_id)
         --Animate driver leaving Station
         local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["stopX"]+.5+driver_offset_x},{property="Y",ease="In",value=trainProps["stopY"]+.5+driver_offset_y}},duration=0}}
         keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+.5+driver_offset_x},{property="Y",ease="In",value=trainProps["endY"]+.5+driver_offset_y}},duration=stop_to_end}
-        keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+.5+train_offset_x},{property="Y",ease="In",value=trainProps["endY"]+.5+train_offset_y}},duration=1}
+        keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+.5+train_offset_x},{property="Y",ease="In",value=trainProps["endY"]+.5+train_offset_y}},duration=1.5}
         Net.animate_bot_properties(driver_id, keyframes) 
         --Animate car leaving Station
         local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["stopX"]+.5+car_offset_x},{property="Y",ease="In",value=trainProps["stopY"]+.5+car_offset_y}},duration=0}}
         keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+.5+car_offset_x},{property="Y",ease="In",value=trainProps["endY"]+.5+car_offset_y}},duration=stop_to_end}
-        keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+.5+train_offset_x},{property="Y",ease="In",value=trainProps["endY"]+.5+train_offset_y}},duration=1}
+        keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+.5+train_offset_x},{property="Y",ease="In",value=trainProps["endY"]+.5+train_offset_y}},duration=1.5}
         Net.animate_bot_properties(car_id, keyframes) 
         --Animate engine leaving Station
         local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["stopX"]+.5+train_offset_x},{property="Y",ease="In",value=trainProps["stopY"]+.5+train_offset_y}},duration=0}}
         keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+.5+train_offset_x},{property="Y",ease="In",value=trainProps["endY"]+.5+train_offset_y}},duration=stop_to_end}
-        keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+.5+train_offset_x},{property="Y",ease="In",value=trainProps["endY"]+.5+train_offset_y}},duration=1}
+        keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+.5+train_offset_x},{property="Y",ease="In",value=trainProps["endY"]+.5+train_offset_y}},duration=1.5}
+
         Net.animate_bot_properties(engine_id, keyframes)
         --Animate pedestal leaving Station
         if direction == "DR" or direction == "DL" then
             local keyframes = {{properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["stopX"]+.5+pedestal_offset_x},{property="Y",ease="In",value=trainProps["stopY"]+.5+pedestal_offset_y}},duration=0}}
             keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+.5+pedestal_offset_x},{property="Y",ease="In",value=trainProps["endY"]+.5+pedestal_offset_y}},duration=stop_to_end}
+            keyframes[#keyframes+1] = {properties={{property="Animation",value="IDLE_"..direction},{property="X",ease="In",value=trainProps["endX"]+.5+pedestal_offset_x},{property="Y",ease="In",value=trainProps["endY"]+.5+pedestal_offset_y}},duration=1.5}
+
             Net.animate_bot_properties(pedestal_id, keyframes)
         end
         await(Async.sleep(stop_to_end))
@@ -786,6 +789,8 @@ function greet_conductor(bot_id,player_id)
             post_type = "__message"
         elseif string.lower(conductorProps["1 Type"]) == "label" then
             post_type = "__label"
+        elseif string.lower(conductorProps["1 Type"]) == "area" then
+            post_type = "__area"
         end
     else
         post_type = "__area"
@@ -796,6 +801,9 @@ function greet_conductor(bot_id,player_id)
         if conductorProps[(#posts+1).." Type"] then
             if string.lower(conductorProps[(#posts+1).." Type"]) == "server" then
                 post_type = "__server"
+            elseif string.lower(conductorProps[(#posts+1).." Type"]) == "area" then
+                post_type = "__area"
+
             elseif string.lower(conductorProps[(#posts+1).." Type"]) == "label" then
                 post_type = "__label"
             elseif string.lower(conductorProps[(#posts+1).." Type"]) == "message" then
