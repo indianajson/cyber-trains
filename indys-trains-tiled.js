@@ -364,8 +364,8 @@ function addPassengerTrain() {
         obj.setProperty("Color", colorBox.currentText);
         obj.setProperty("Speed", speedField.text);
         obj.setProperty("Direction", directionBox.currentText);
-        obj.setProperty("Train Z", trainZField.currentText);
-        obj.setProperty("Platform Z", platZField.currentText);
+        obj.setProperty("Train Z", trainZField.text);
+        obj.setProperty("Platform Z", platZField.text);
         obj.setProperty("Start", startField.text);
         obj.setProperty("Stop", stopField.text);
         obj.setProperty("End", endField.text);
