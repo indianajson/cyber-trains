@@ -1,14 +1,15 @@
 print("[trains] Starting Indy's Trains")
+
+-- VERSION v1.09 
+
 -- CODER'S NOTE: When using keyframes, your await() must be 1/2 second longer than your duration or the player/bot won't arrive before the next animation starts.
 
+-- ROAD MAP
 
 -- v1.1 features
 -- Cargo Train Enhancements
     -- Add pedestal
     -- Add cargo NPC
--- Animation Smoothing
-    -- We may need to add extra key frames to arrival and departure to smooth arrival speed.
-    -- Jitter is a bit annoying. 
 
 -- v2 features
 -- multi-car cargo trains (a matter of making scalable offset values and handling for cars to animate)
@@ -1086,6 +1087,17 @@ Net:on("player_area_transfer", function(event)
     end
 end)
 
+Net:on("player_join", function(event)
+    -- checks if a player is currently ridding a train
+    if passenger_cache[event.player_id] then 
+        if passenger_cache[event.player_id]['intransit'] == true then
+            --calls function to grab transferred player, place them on the train, and drop off at platform 
+            passenger_cache[event.player_id]['intransit'] = false
+            summon_arriving_passenger_train(event.player_id)
+        end
+    end
+end)
+
 Net:on("player_request", function(event)
     -- on arrival we add the player to the passenger_cache and transfer them causing spawn_arrival_passenger_train to be called 
     if event.data ~= "" then
@@ -1111,7 +1123,7 @@ Net:on("player_request", function(event)
                         track_cache[destination_area][train_name] = {}
                     end 
                     track_cache[destination_area][train_name]['occupied'] = true
-                    summon_arriving_passenger_train(event.player_id)
+                    --summon_arriving_passenger_train(event.player_id)
                 end
                 -- if not we just dump them off at the Home Warp 
         end 
