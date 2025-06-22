@@ -111,8 +111,12 @@ The conductor object will spawn an Conductor Prog when your server boots. When p
 > &nbsp; &nbsp; So if you're tranferring to 912.23.55.221:8765 and the area is acdc3.tmx and the recieving train name is mytrain then<br>
 > &nbsp; &nbsp; you would enter `912.23.55.221:8765,acdc3,mytrain`. You will need to coordinate with the other server's owner to get the values.<br>
 > `Destination #1 Label` enter a value for what you want to appear in the menu selection (if going to acdc2.tmx you would want the label to be `ACDC 2`).<br>
-> `Destination #1 Type` make a selection based on what type of transfer is occuring. 
+> `Destination #1 Type` make a selection based on what type of transfer is occuring.<br>
+> &nbsp; &nbsp; If you use `Label` or `Message` see the information below. <br>
+> &nbsp; &nbsp; For purely aesthetic labels (that have no interaction), set `# Type` to `label` and the contents of `# Name` will show without any interaction possible (you will still need to provide a dummy value for `# Area` even though it does nothing).<br<
+> &nbsp; &nbsp; For messages read by a bot, set the `# Type` to `message` and the conductor to read the contents of `# Area` when the label from `# Name` is selected<br>
 5. Click `Add Conductor` and be sure to position it as the position dictates where it spawns.
+
 
 If you want to add a second destination click `Add Another Destination` and fill out the fields as before. If you add too many destinations simply leave the extras blank.
 
@@ -126,12 +130,12 @@ Yes, simple do not add a Conductor on the other end. Once the player arrives at 
 
 Yes, each conductor is completely independent and can have a unique list of destinations. For example, let's say you have a Conductor in ACDC 1, SciLab 1, and Yoka Square. You can make the Conductor in ACDC have SciLab 1 and Yoka Square as destinations, but the Yoka Square conductor can have just SciLab 1 as a destination. 
 
-<!--
+
 &nbsp; <br>
 ### Can I add extra non-destination rows to the Conductor menu?
 
-Yes, if you want to add a row of text that doesn't send someone to a destination make the destination `cancel` and use the destination label as your textblock. This will close the menu if they select it and not activate a train. 
--->
+Yes!
+
 &nbsp; <br>
 ### Credits
 
