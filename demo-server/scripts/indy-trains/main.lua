@@ -1080,6 +1080,7 @@ Net:on("player_area_transfer", function(event)
     -- checks if a player is currently ridding a train
     if passenger_cache[event.player_id] then 
         if passenger_cache[event.player_id]['intransit'] == true then
+            Net.fade_player_camera(player_id, {r=0, g=0, b=0, a=255}, 0)
             --calls function to grab transferred player, place them on the train, and drop off at platform 
             passenger_cache[event.player_id]['intransit'] = false
             summon_arriving_passenger_train(event.player_id)
@@ -1091,6 +1092,7 @@ Net:on("player_join", function(event)
     -- checks if a player is currently ridding a train
     if passenger_cache[event.player_id] then 
         if passenger_cache[event.player_id]['intransit'] == true then
+            Net.fade_player_camera(player_id, {r=0, g=0, b=0, a=255}, 0)
             --calls function to grab transferred player, place them on the train, and drop off at platform 
             passenger_cache[event.player_id]['intransit'] = false
             summon_arriving_passenger_train(event.player_id)
@@ -1103,7 +1105,7 @@ Net:on("player_request", function(event)
     if event.data ~= "" then
         -- checks for data format used by train mod
         if string.find(event.data, "trains__") then
-            print(event.data)
+            Net.fade_player_camera(player_id, {r=0, g=0, b=0, a=255}, 0)
             local post_data = splitter(event.data,"__")
             if not passenger_cache[event.player_id] then
                 passenger_cache[event.player_id] = {}
