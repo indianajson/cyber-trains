@@ -70,7 +70,7 @@ function await(v) return Async.await(v) end
 
 --Find all trains in all areas, removes placeholders, and triggers them to start
 --usage: runs on server boot to find all train and conductor objects and handle setup
-function find_trains()
+local function find_trains()
     local areas = Net.list_areas()
     --Check every area
     for i, area_id in next, areas do
@@ -114,7 +114,7 @@ end
 
 --usage: called when a player selects an option from a train menu
 --purpose: to spawn a train, pickup player, and depart (if track is not already occupied)
-function summon_arriving_passenger_train(player_id)
+local function summon_arriving_passenger_train(player_id)
     
         --Clear player specific cache
 
@@ -331,7 +331,7 @@ function summon_arriving_passenger_train(player_id)
     end)    
 end
 
-function summon_departing_passenger_train(player_id,post_id)
+local function summon_departing_passenger_train(player_id,post_id)
 
     local post_data = splitter(post_id,"__")
     local train_name = post_data[1]
@@ -631,7 +631,7 @@ end
 
 --purpose: validates passenger train configuration, checks provided properties, and assigns necessary properties.
 --usage: called on server boot for each passenger train object
-function validate_passenger_train(area_id,train_name)
+local function validate_passenger_train(area_id,train_name)
     local train = train_cache[area_id][train_name]
     for i, prop_name in pairs(passenger_train_required_properties) do
         if not train.custom_properties[prop_name] then
@@ -747,7 +747,7 @@ end
 
 --purpose: populates and opens train route selection menu
 --usage: called when player interacts with conductor
-function greet_conductor(bot_id,player_id)
+local function greet_conductor(bot_id,player_id)
     local area_id = Net.get_player_area(player_id)
     local conductor = conductor_cache[area_id][bot_id]
     local conductorProps = conductor.custom_properties
@@ -832,7 +832,7 @@ end
 
 --purpose: validates conductor configuration, checks provided properties, assigns necessary properties, and spawns bot.
 --usage: called on server boot for each conductor object
-function spawn_conductor(area_id, object_data)
+local function spawn_conductor(area_id, object_data)
     conductor = object_data
     for i, prop_name in pairs(conductor_required_properties) do
         if not conductor.custom_properties[prop_name] then
@@ -882,7 +882,7 @@ end
 
 --purpose: validates cargo train configuraton, checks properties, assigns necessary properties, and spawns bots.
 --usage: called on server boot for each cargo train object
-function validate_cargo_train(area_id,train_name)
+local function validate_cargo_train(area_id,train_name)
 
     local train = train_cache[area_id][train_name]
     for i, prop_name in pairs(cargo_train_required_properties) do
@@ -987,7 +987,7 @@ end
 
 --animate a given cargo train for one loop
 --usage: called within the Net.on("tick") function whenever a given cargo train's animation ends 
-function run_cargo_train(area_id,train_name)
+local function run_cargo_train(area_id,train_name)
     train = train_cache[area_id][train_name]
     trainProps = train.custom_properties
     --print('[trains] \''..train.name..'\' cargo train departed.')
