@@ -537,7 +537,15 @@ local function summon_departing_passenger_train(player_id,post_id)
             Net.fade_player_camera(player_id, {r=0, g=0, b=0, a=255}, fade_wait)
             local player_position = Net.get_player_position(player_id)
             Net.move_player_camera(player_id, player_position.x, player_position.y, player_position.z, fade_wait)
-            await(Async.sleep(fade_wait+.5))
+            await(Async.sleep(fade_wait))
+            --Net.move_bot(engine_id,trainProps["endY"]+.5+train_offset_x,trainProps["endY"]+.5+train_offset_y,trainProps["Train Z"])
+            --Net.move_bot(driver_id,trainProps["endX"]+.5+driver_offset_x,trainProps["endY"]+.5+driver_offset_y,trainProps["Train Z"])
+            --Net.move_bot(car_id,trainProps["endX"]+.5+car_offset_x,trainProps["endY"]+.5+car_offset_y,trainProps["Train Z"])
+            --if direction == "DR" or direction == "DL" then
+            --    Net.move_bot(car_id,trainProps["endX"]+.5+pedestal_offset_x,trainProps["endY"]+.5+pedestal_offset_y,trainProps["Train Z"])
+            --end
+
+            await(Async.sleep(.5))
             Net.remove_bot(engine_id,false)
             Net.remove_bot(driver_id,false)
             Net.remove_bot(car_id,false)
@@ -708,7 +716,6 @@ end
 --purpose: populates and opens train route selection menu
 --usage: called when player interacts with conductor
 local function greet_conductor(bot_id,player_id)
-    Net.lock_player_input(player_id)
     return async(function ()
     local area_id = Net.get_player_area(player_id)
     local conductor = conductor_cache[area_id][bot_id]
@@ -727,7 +734,7 @@ local function greet_conductor(bot_id,player_id)
         Net.message_player(player_id, "Another train is on the track, please wait for further traffic clearance.", conductorProps["Mug Texture"], conductorProps["Mug Animation"]) 
         return false
     end
-
+    Net.lock_player_input(player_id)
     player_using_train_menu[player_id] = true
     local board_color = { r= 120, g= 196, b= 159 }
     local posts = {}
