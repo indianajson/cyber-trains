@@ -536,16 +536,16 @@ local function summon_departing_passenger_train(player_id,post_id)
             await(Async.sleep(2*(fade_wait)))
             Net.fade_player_camera(player_id, {r=0, g=0, b=0, a=255}, fade_wait)
             local player_position = Net.get_player_position(player_id)
-            Net.move_player_camera(player_id, player_position.x, player_position.y, player_position.z, fade_wait)
-            await(Async.sleep(fade_wait))
-            --Net.move_bot(engine_id,trainProps["endY"]+.5+train_offset_x,trainProps["endY"]+.5+train_offset_y,trainProps["Train Z"])
-            --Net.move_bot(driver_id,trainProps["endX"]+.5+driver_offset_x,trainProps["endY"]+.5+driver_offset_y,trainProps["Train Z"])
-            --Net.move_bot(car_id,trainProps["endX"]+.5+car_offset_x,trainProps["endY"]+.5+car_offset_y,trainProps["Train Z"])
-            --if direction == "DR" or direction == "DL" then
-            --    Net.move_bot(car_id,trainProps["endX"]+.5+pedestal_offset_x,trainProps["endY"]+.5+pedestal_offset_y,trainProps["Train Z"])
-            --end
+            Net.slide_player_camera(player_id, player_position.x, player_position.y, player_position.z, fade_wait)
+            await(Async.sleep(fade_wait-.5))
+            Net.move_bot(engine_id,trainProps["endY"]+.5+train_offset_x,trainProps["endY"]+.5+train_offset_y,trainProps["Train Z"])
+            Net.move_bot(driver_id,trainProps["endX"]+.5+driver_offset_x,trainProps["endY"]+.5+driver_offset_y,trainProps["Train Z"])
+            Net.move_bot(car_id,trainProps["endX"]+.5+car_offset_x,trainProps["endY"]+.5+car_offset_y,trainProps["Train Z"])
+            if direction == "DR" or direction == "DL" then
+                Net.move_bot(car_id,trainProps["endX"]+.5+pedestal_offset_x,trainProps["endY"]+.5+pedestal_offset_y,trainProps["Train Z"])
+            end
 
-            await(Async.sleep(.5))
+            await(Async.sleep(.1))
             Net.remove_bot(engine_id,false)
             Net.remove_bot(driver_id,false)
             Net.remove_bot(car_id,false)
