@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="isometric" renderorder="right-down" width="30" height="20" tilewidth="64" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="51">
+<map version="1.8" tiledversion="1.11.2" orientation="isometric" renderorder="right-down" width="30" height="20" tilewidth="64" tileheight="32" infinite="0" nextlayerid="14" nextobjectid="51">
  <properties>
   <property name="Background Animation" value="/server/assets/indy-trains/demo/clockman.animation"/>
   <property name="Background Texture" value="/server/assets/indy-trains/demo/clockman.png"/>
@@ -162,7 +162,7 @@
    <properties>
     <property name="1 Area" value="default"/>
     <property name="1 Name" value="ACDC 1"/>
-    <property name="2 Area" value="127.0.0.1:8765"/>
+    <property name="2 Area" value="127.0.0.1:8765,default,train"/>
     <property name="2 Name" value="Gravy Yum"/>
     <property name="2 Type" value="Server"/>
     <property name="Train" value="test1"/>

@@ -1,14 +1,13 @@
 print("[trains] Starting Indy's Trains")
 
--- VERSION v1.09 
+-- VERSION v1.10
 
 -- CODER'S NOTE: When using keyframes, your await() must be 1/2 second longer than your duration or the player/bot won't arrive before the next animation starts.
 
 -- ROAD MAP
 
 -- v1.1 features
--- Offline Status 
-    --https://discord.com/channels/@me/1354312567241310218/1388251194924863570
+-- fix train re-appearance at station issue 
 -- Cargo Train Enhancements
     -- Add pedestal
     -- Add cargo NPC
@@ -37,7 +36,7 @@ local default_driver_mug_texture_path="/server/assets/indy-trains/conductor-prog
 local default_driver_mug_animation_path="/server/assets/indy-trains/conductor-prog-mug.animation"
 local default_color = "orange" --selects a different sprite sheet for engine and cars 
 local default_speed = 1 --sets the speed it moves with 1 (one) being MMBN3-esque.
-
+local servers = {}
 --setup variables
 local train_cache = {} 
 local conductor_cache = {}
@@ -45,6 +44,7 @@ local cargo_schedule = {}
 local passenger_cache = {}
 local track_cache = {}
 local player_using_train_menu = {}
+local server_timer = 60
 
 --purpose: splits a string based on a delimiter
 --usaged: used at various points to seperate values
@@ -768,10 +768,8 @@ local function greet_conductor(bot_id,player_id)
     post_id = train_name.."__"..destination..post_type
 
     if post_type == "__server" then
-        local serverbitA = splitter(destination,",")
-        local serverbits = splitter(serverbitA[1],":")
-        local result = await(Async.poll_server(serverbits[1],serverbits[2]))
-        if result == nil then
+        local server = splitter(destination,",")
+        if servers[server[1]] == "offline" then
             post_id = train_name.."__"..destination.."__label"
             post_name = "*Offline* "..post_name
         end 
@@ -801,10 +799,8 @@ local function greet_conductor(bot_id,player_id)
         end
 
         if post_type == "__server" then
-            local serverbitA = splitter(destination,",")
-            local serverbits = splitter(serverbitA[1],":")
-            local result = await(Async.poll_server(serverbits[1],serverbits[2]))
-            if result == nil then
+            local server = splitter(destination,",")
+            if servers[server[1]] == "offline" then
                 post_id = train_name.."__"..destination.."__label"
                 post_name = "*Offline* "..post_name
             end 
@@ -823,6 +819,73 @@ local function greet_conductor(bot_id,player_id)
 end)
 end
 
+local function populate_server_list() 
+    return async(function ()
+        for i, conductors in next, conductor_cache do
+            for i,conductor in next,conductors do 
+                local ii = 1
+                local more_posts = false 
+                if conductor.custom_properties['2 Area'] then
+                    more_posts = true
+                end
+                if conductor.custom_properties['1 Type'] then
+                    if string.lower(conductor.custom_properties['1 Type']) == "server" then
+                        local destination = conductor.custom_properties["1 Area"]
+                        local parts = splitter(destination,",")
+
+                        table.insert(servers, parts[1])
+                    end
+                end
+                
+                while more_posts == true do
+                    ii=ii+1
+                    if conductor.custom_properties[(ii)..' Type'] then
+                        if string.lower(conductor.custom_properties[(ii)..' Type']) == "server" then
+                            local destination = conductor.custom_properties[(ii).." Area"]
+                            local parts = splitter(destination,",")
+                            table.insert(servers, parts[1])
+                        end
+                    end
+                    if conductor.custom_properties[(ii).." Area"] == nil then
+                        more_posts = false
+                    end
+                end 
+            end
+        end
+        local servers2 = {}
+        local hash = {}
+        for _,v in ipairs(servers) do
+            if (not hash[v]) then
+                servers2[#servers2+1] = v -- you could print here instead of saving to result table if you wanted
+                hash[v] = true
+            end
+        end
+        servers = {}
+        for i,server in next,servers2 do 
+            local serverbits = splitter(server,":")
+            local result = await(Async.poll_server(serverbits[1],serverbits[2]))
+            if result ~= nil then
+                servers[server] = "online"
+            else 
+                servers[server] = "offline"
+            end
+        end 
+    end)
+end
+
+local function check_servers()
+    return async(function ()
+        for server,status in next,servers do 
+            local serverbits = splitter(server,":")
+            local result = await(Async.poll_server(serverbits[1],serverbits[2]))
+            if result ~= nil then
+                servers[server] = "online"
+            else 
+                servers[server] = "offline"
+            end
+        end 
+    end)
+end 
 --purpose: validates conductor configuration, checks provided properties, assigns necessary properties, and spawns bot.
 --usage: called on server boot for each conductor object
 local function spawn_conductor(area_id, object_data)
@@ -1085,7 +1148,7 @@ local function find_trains()
 end
 
 find_trains()
-results = ""
+populate_server_list()
 
 Net:on("actor_interaction", function(event)
     if event.button == 0 then 
@@ -1180,5 +1243,10 @@ Net:on("tick", function(event)
             train["remaining"] = train["remaining"] - event.delta_time
         end
     end 
-
+    if server_timer <= 0 then
+        check_servers()
+        server_timer = 60
+    else 
+        server_timer = server_timer - event.delta_time
+    end
 end)
