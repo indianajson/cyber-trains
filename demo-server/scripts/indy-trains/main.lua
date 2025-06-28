@@ -7,6 +7,8 @@ print("[trains] Starting Indy's Trains")
 -- ROAD MAP
 
 -- v1.1 features
+-- Offline Status 
+    --https://discord.com/channels/@me/1354312567241310218/1388251194924863570
 -- Cargo Train Enhancements
     -- Add pedestal
     -- Add cargo NPC
@@ -68,49 +70,7 @@ end
 --Shorthand for await
 function await(v) return Async.await(v) end
 
---Find all trains in all areas, removes placeholders, and triggers them to start
---usage: runs on server boot to find all train and conductor objects and handle setup
-local function find_trains()
-    local areas = Net.list_areas()
-    --Check every area
-    for i, area_id in next, areas do
-        area_id = tostring(area_id)
-        if not train_cache[area_id] then
-            train_cache[area_id] = {}
-        --Loop over all objects in area, spawning trains for each train object.
-        local objects = Net.list_objects(area_id)
-            for i, object_id in next, objects do    
-                local object = Net.get_object_by_id(area_id, object_id)
-                object_id = tostring(object_id)
-                if object.type == "Passenger Train" then
-                    --Grab the object data, cache it, and remove placeholder from the map
-                    train_cache[area_id][object.name] = object
-                    Net.remove_object(area_id, object_id)
-                    print('[trains] Found the \''..object.name..'\' passenger train in '..area_id..'.tmx')
-                    validate_passenger_train(area_id, object.name)
 
-                elseif object.type == "Cargo Train" then
-                    --Grab the object data, cache it, and remove placeholder from the map
-                    train_cache[area_id][object.name] = object
-                    Net.remove_object(area_id, object_id)
-                    print('[trains] Checking the \''..object.name..'\' cargo train in '..area_id..'.tmx')
-                    validate_cargo_train(area_id, object.name)
-                end
-            end
-            local objects = Net.list_objects(area_id)
-            for i, object_id in next, objects do    
-                local object = Net.get_object_by_id(area_id, object_id)
-                object_id = tostring(object_id)
-                if object.type == "Conductor" then
-                    --Grab the object data, cache it, and remove placeholder from the map
-                    Net.remove_object(area_id, object_id)
-                    print('[trains] Found \''..object.name..'\' conductor in '..area_id..'.tmx')
-                    spawn_conductor(area_id, object)
-                end
-            end
-        end
-    end
-end
 
 --usage: called when a player selects an option from a train menu
 --purpose: to spawn a train, pickup player, and depart (if track is not already occupied)
@@ -748,6 +708,8 @@ end
 --purpose: populates and opens train route selection menu
 --usage: called when player interacts with conductor
 local function greet_conductor(bot_id,player_id)
+    Net.lock_player_input(player_id)
+    return async(function ()
     local area_id = Net.get_player_area(player_id)
     local conductor = conductor_cache[area_id][bot_id]
     local conductorProps = conductor.custom_properties
@@ -797,6 +759,16 @@ local function greet_conductor(bot_id,player_id)
         post_type = "__area"
     end
     post_id = train_name.."__"..destination..post_type
+
+    if post_type == "__server" then
+        local serverbitA = splitter(destination,",")
+        local serverbits = splitter(serverbitA[1],":")
+        local result = await(Async.poll_server(serverbits[1],serverbits[2]))
+        if result == nil then
+            post_id = train_name.."__"..destination.."__label"
+            post_name = "*Offline* "..post_name
+        end 
+    end
     posts[#posts+1] = { id=post_id, read=true, title=post_name , author="" }
     while more_posts == true do
         if conductorProps[(#posts+1).." Type"] then
@@ -820,14 +792,28 @@ local function greet_conductor(bot_id,player_id)
         else 
             post_name = conductorProps[(#posts+1).." Area"]
         end
+
+        if post_type == "__server" then
+            local serverbitA = splitter(destination,",")
+            local serverbits = splitter(serverbitA[1],":")
+            local result = await(Async.poll_server(serverbits[1],serverbits[2]))
+            if result == nil then
+                post_id = train_name.."__"..destination.."__label"
+                post_name = "*Offline* "..post_name
+            end 
+        end
+
         posts[#posts+1] = { id=post_id, read=true, title=post_name , author="" }
         if conductorProps[(#posts+1).." Area"] == nil then
             more_posts = false
         end
     end
     posts[#posts+1] = { id="cancel", read=true, title="Cancel" , author="" }
+    Net.unlock_player_input(player_id)
+
     Net.open_board(player_id, "Where to?", board_color, posts)
 
+end)
 end
 
 --purpose: validates conductor configuration, checks provided properties, assigns necessary properties, and spawns bot.
@@ -1047,7 +1033,52 @@ local function run_cargo_train(area_id,train_name)
 
 end
 
+--Find all trains in all areas, removes placeholders, and triggers them to start
+--usage: runs on server boot to find all train and conductor objects and handle setup
+local function find_trains()
+    local areas = Net.list_areas()
+    --Check every area
+    for i, area_id in next, areas do
+        area_id = tostring(area_id)
+        if not train_cache[area_id] then
+            train_cache[area_id] = {}
+        --Loop over all objects in area, spawning trains for each train object.
+        local objects = Net.list_objects(area_id)
+            for i, object_id in next, objects do    
+                local object = Net.get_object_by_id(area_id, object_id)
+                object_id = tostring(object_id)
+                if object.type == "Passenger Train" then
+                    --Grab the object data, cache it, and remove placeholder from the map
+                    train_cache[area_id][object.name] = object
+                    Net.remove_object(area_id, object_id)
+                    print('[trains] Found the \''..object.name..'\' passenger train in '..area_id..'.tmx')
+                    validate_passenger_train(area_id, object.name)
+
+                elseif object.type == "Cargo Train" then
+                    --Grab the object data, cache it, and remove placeholder from the map
+                    train_cache[area_id][object.name] = object
+                    Net.remove_object(area_id, object_id)
+                    print('[trains] Checking the \''..object.name..'\' cargo train in '..area_id..'.tmx')
+                    validate_cargo_train(area_id, object.name)
+                end
+            end
+            local objects = Net.list_objects(area_id)
+            for i, object_id in next, objects do    
+                local object = Net.get_object_by_id(area_id, object_id)
+                object_id = tostring(object_id)
+                if object.type == "Conductor" then
+                    --Grab the object data, cache it, and remove placeholder from the map
+                    Net.remove_object(area_id, object_id)
+                    print('[trains] Found \''..object.name..'\' conductor in '..area_id..'.tmx')
+                    spawn_conductor(area_id, object)
+                end
+            end
+        end
+    end
+end
+
 find_trains()
+results = ""
 
 Net:on("actor_interaction", function(event)
     if event.button == 0 then 
@@ -1080,7 +1111,7 @@ Net:on("player_area_transfer", function(event)
     -- checks if a player is currently ridding a train
     if passenger_cache[event.player_id] then 
         if passenger_cache[event.player_id]['intransit'] == true then
-            Net.fade_player_camera(player_id, {r=0, g=0, b=0, a=255}, 0)
+            Net.fade_player_camera(event.player_id, {r=0, g=0, b=0, a=255}, 0)
             --calls function to grab transferred player, place them on the train, and drop off at platform 
             passenger_cache[event.player_id]['intransit'] = false
             summon_arriving_passenger_train(event.player_id)
@@ -1092,7 +1123,7 @@ Net:on("player_join", function(event)
     -- checks if a player is currently ridding a train
     if passenger_cache[event.player_id] then 
         if passenger_cache[event.player_id]['intransit'] == true then
-            Net.fade_player_camera(player_id, {r=0, g=0, b=0, a=255}, 0)
+            Net.fade_player_camera(event.player_id, {r=0, g=0, b=0, a=255}, 0)
             --calls function to grab transferred player, place them on the train, and drop off at platform 
             passenger_cache[event.player_id]['intransit'] = false
             summon_arriving_passenger_train(event.player_id)
@@ -1105,7 +1136,7 @@ Net:on("player_request", function(event)
     if event.data ~= "" then
         -- checks for data format used by train mod
         if string.find(event.data, "trains__") then
-            Net.fade_player_camera(player_id, {r=0, g=0, b=0, a=255}, 0)
+            Net.fade_player_camera(event.player_id, {r=0, g=0, b=0, a=255}, 0)
             local post_data = splitter(event.data,"__")
             if not passenger_cache[event.player_id] then
                 passenger_cache[event.player_id] = {}
