@@ -10,7 +10,7 @@ A script to add customizable cyber metro trains (from BN3/EXE3) to Open Net Batt
 
 ### Want to try it out? 
 
-> You can see the trains in action right now on the BN3 server: `159.223.165.219:3000` or this repository is a complete test server you can spin up that includes configured examples for both types of trains and the conductor. It will show you how they should be configured and how they function in-game without having to do the setup yourself. 
+> You can see the trains in action right now on the Central Station server: `96.60.137.203:8768` or this repository is a complete test server you can spin up that includes configured examples for both types of trains and the conductor. It will show you how they should be configured and how they function in-game without having to do the setup yourself. 
 
 ### How do I install this on my ONB server? 
 
@@ -43,7 +43,7 @@ Cargo Trains run along a straight path on a loop and do not have any interaction
 >  &nbsp; &nbsp; For the bottom most layer, Z equals 0 and goes up by 1 as you move upward.<br>
 > `Start Point` provide a x,y tile position (hover over a tile and look in the bottom left of Tiled to see X and Y).<br>
 > `End Point` provide a x,y tile position (hover over a tile and look in the bottom left of Tiled to see X and Y).<br>
-> `Driver Texture` path to image file for your Driver NPC (optionaL). <br>
+> `Driver Texture` path to image file for your Driver NPC (optional). <br>
 > `Driver Animation` path to .animation file for your Driver NPC (optional). <br>
 > `Cargo Texture` (NOT IMPLEMENTED) path to image file for your cargo/passenger NPC (optional). <br>
 > `Cargo Animation` (NOT IMPLEMENTED) path to .animation file for your cargo/passenger NPC (optional).
