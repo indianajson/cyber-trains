@@ -10,7 +10,7 @@ A script to add customizable cyber metro trains (from BN3/EXE3) to Open Net Batt
 
 ### Want to try it out? 
 
-> You can see the trains in action right now on the Central Station server: `96.60.137.203:8768` or this repository is a complete test server you can spin up that includes configured examples for both types of trains and the conductor. It will show you how they should be configured and how they function in-game without having to do the setup yourself. 
+> You can see the trains in action right now on the BN3 Revamped server: `159.223.165.219:3000` or this repository is a complete test server you can spin up that includes configured examples for both types of trains and the conductor. It will show you how they should be configured and how they function in-game without having to do the setup yourself. 
 
 ### How do I install this on my ONB server? 
 
